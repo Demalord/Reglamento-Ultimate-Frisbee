@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { FieldMap } from '../components/FieldMap'
+import { QuizPanel } from '../components/QuizPanel'
 import { ProgressBar } from '../components/ProgressBar'
 import { MODULES, TOTAL_LESSONS, rulesLabel } from '../content/manifest'
 import { countAllLessons, itemPath, nextItem } from '../lib/progress'
@@ -48,6 +49,8 @@ export function Home() {
           </span>
         </Link>
       )}
+
+      <QuizPanel />
 
       <FieldMap done={done} unlockAll={isAdmin} />
     </div>

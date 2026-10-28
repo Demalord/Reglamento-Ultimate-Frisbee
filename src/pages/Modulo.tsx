@@ -2,6 +2,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { CheckIcon, LockIcon } from '../components/FieldMap'
 import { ProgressBar } from '../components/ProgressBar'
+import { QuizPanel } from '../components/QuizPanel'
 import { getModule, rulesLabel } from '../content/manifest'
 import { countDone, lessonStatus, lockReason, moduleStatus, reviewId, reviewStatus } from '../lib/progress'
 
@@ -29,6 +30,8 @@ export function Modulo() {
           <ProgressBar value={n} max={mod.lessons.length} label={`Progreso del módulo ${mod.id}`} />
         </div>
       </header>
+
+      <QuizPanel moduleId={mod.id} />
 
       <ol className="lessons">
         {mod.lessons.map((l, i) => {
