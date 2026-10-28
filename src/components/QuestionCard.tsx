@@ -17,19 +17,32 @@ interface Props {
  * Radios nativos (teclado y lectores de pantalla funcionan solos),
  * feedback en aria-live, correcto/incorrecto con ícono + texto (no solo color).
  */
+/** Baraja Fisher–Yates: el orden de las opciones cambia cada vez que se abre la pregunta. */
+function shuffled(n: number) {
+  const a = Array.from({ length: n }, (_, i) => i)
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
 export function QuestionCard({ question, onAnswered, heading, allowRetry = true }: Props) {
   const name = useId()
+  // order[pos] = índice original de la opción que se muestra en esa posición
+  const [order] = useState(() => shuffled(question.options.length))
+  const correctPos = order.indexOf(question.correct)
   const [selected, setSelected] = useState<number | null>(null)
   const [checked, setChecked] = useState(false)
   const [reported, setReported] = useState(false)
-  const isCorrect = selected === question.correct
+  const isCorrect = selected === correctPos
 
   const check = () => {
     if (selected === null) return
     setChecked(true)
     if (!reported) {
       setReported(true)
-      onAnswered?.(selected === question.correct)
+      onAnswered?.(selected === correctPos)
     }
   }
 
@@ -48,10 +61,11 @@ export function QuestionCard({ question, onAnswered, heading, allowRetry = true 
           </span>
         </legend>
         <div className="options">
-          {question.options.map((opt, i) => {
+          {order.map((orig, i) => {
+            const opt = question.options[orig]
             const state = !checked
               ? ''
-              : i === question.correct
+              : i === correctPos
                 ? 'is-correct'
                 : i === selected
                   ? 'is-wrong'
@@ -71,8 +85,8 @@ export function QuestionCard({ question, onAnswered, heading, allowRetry = true 
                 <span className="option-text">
                   <RichText text={opt} plain />
                 </span>
-                {checked && i === question.correct && <span className="sr-only"> (respuesta correcta)</span>}
-                {checked && i === selected && i !== question.correct && <span className="sr-only"> (tu respuesta)</span>}
+                {checked && i === correctPos && <span className="sr-only"> (respuesta correcta)</span>}
+                {checked && i === selected && i !== correctPos && <span className="sr-only"> (tu respuesta)</span>}
               </label>
             )
           })}
@@ -84,7 +98,7 @@ export function QuestionCard({ question, onAnswered, heading, allowRetry = true 
           <div className={`feedback ${isCorrect ? 'feedback-ok' : 'feedback-bad'}`}>
             <p className="feedback-title">
               <span aria-hidden="true">{isCorrect ? '✓' : '✗'}</span>{' '}
-              {isCorrect ? '¡Correcto!' : `No es correcto. La respuesta es la ${String.fromCharCode(65 + question.correct)}.`}
+              {isCorrect ? '¡Correcto!' : `No es correcto. La respuesta es la ${String.fromCharCode(65 + correctPos)}.`}
             </p>
             <p>
               <RichText text={question.explanation} />

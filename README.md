@@ -67,7 +67,7 @@ firestore.rules           seguridad de la base de datos
 - [ ] **Fase 2:** contenido de las 24 lecciones (pasos + pregunta de control) y glosario
   - [x] Motor de lecciones guiadas, repaso por módulo y glosario con tooltips
   - [x] Módulo 1: Fundamentos y Espíritu del Juego
-  - [ ] Módulo 2: Flujo del juego
+  - [x] Módulo 2: Flujo del juego
   - [ ] Módulo 3: Posesión, límites y anotación
   - [ ] Módulo 4: Llamadas, faltas y violaciones
 - [ ] **Fase 3:** quizzes por módulo, calendario y pantalla de resultados con gráfico
