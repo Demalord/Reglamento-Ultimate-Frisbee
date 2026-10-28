@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { TEAM_NAME } from '../config'
-import { DiscIcon } from './DiscIcon'
 
 function initials(name: string) {
   return name
@@ -79,7 +78,7 @@ export function Layout() {
       <header className="header">
         <div className="header-inner">
           <NavLink to="/" className="brand" end>
-            <DiscIcon />
+            <img src={`${import.meta.env.BASE_URL}agusti.png`} alt="" width={38} height={38} />
             <span>
               Reglamento Ultimate
               <small>{TEAM_NAME}</small>

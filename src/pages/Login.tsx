@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
-import { DiscIcon } from '../components/DiscIcon'
 import { TEAM_NAME } from '../config'
 
 export function Login() {
@@ -37,7 +36,7 @@ export function Login() {
   return (
     <div className="login">
       <div className="login-card">
-        <DiscIcon className="login-disc" />
+        <img className="login-mascot" src={`${import.meta.env.BASE_URL}agusti.png`} alt="Agusti, la mascota del equipo" width={112} height={112} />
         <h1>Reglamento Ultimate</h1>
         <p className="lede">
           Estudia las reglas WFDF 2025–2028 paso a paso con {TEAM_NAME}.

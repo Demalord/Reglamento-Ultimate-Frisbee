@@ -23,4 +23,7 @@ export const ADMIN_EMAILS: string[] = [
 // 3. Nombre del equipo (aparece en el header y el login).
 export const TEAM_NAME = 'Ultimate Uniagustiniana'
 
+// 4. Lema que aparece en el inicio.
+export const TEAM_MOTTO = 'Disciplina, equipo, competencia'
+
 export const isFirebaseConfigured = !firebaseConfig.apiKey.startsWith('TU_')

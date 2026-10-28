@@ -4,6 +4,7 @@ import { FieldMap } from '../components/FieldMap'
 import { ProgressBar } from '../components/ProgressBar'
 import { MODULES, TOTAL_LESSONS, rulesLabel } from '../content/manifest'
 import { nextLesson } from '../lib/progress'
+import { TEAM_MOTTO } from '../config'
 
 export function Home() {
   const { profile, done, isAdmin } = useAuth()
@@ -14,8 +15,9 @@ export function Home() {
 
   return (
     <div className="home">
-      <div className="home-head">
+      <div className="hero">
         <div>
+          <span className="brush">{TEAM_MOTTO}</span>
           <h1>{firstName ? `Hola, ${firstName}` : 'Hola'}</h1>
           <p className="lede">
             {!next
@@ -25,7 +27,7 @@ export function Home() {
               : 'Cuatro módulos, de tu zona a la zona de anotación. Empieza por el primero.'}
           </p>
         </div>
-        <div className="home-progress">
+        <div className="hero-progress">
           <span className="muted">Lecciones completadas</span>
           <ProgressBar value={done.size} max={TOTAL_LESSONS} label="Progreso total" />
         </div>
@@ -33,7 +35,7 @@ export function Home() {
 
       {next && nextModule && (
         <Link to={`/modulo/${nextModule.id}/leccion/${next.id}`} className="continue">
-          <span className="continue-label">{started ? 'Continúa donde quedaste' : 'Primera lección'}</span>
+          <span className="continue-label brush">{started ? 'Continúa donde quedaste' : 'Primera lección'}</span>
           <span className="continue-title">{next.title}</span>
           <span className="continue-meta">
             Módulo {nextModule.id}. {rulesLabel(next.rules)}. Unos {next.minutes} minutos.

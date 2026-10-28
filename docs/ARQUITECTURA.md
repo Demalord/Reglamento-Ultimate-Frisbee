@@ -112,16 +112,18 @@ results/{uid}_{moduleId}            // 1 intento por estudiante por quiz (fase 3
 
 **Concepto:** el recorrido es la cancha. Los 4 módulos son tramos de la zona central, de tu zona de defensa a la zona de anotación; terminar el módulo 4 es anotar.
 
+**Identidad del equipo:** colores y recursos del afiche oficial de Uniagustiniana (azul marino, amarillo, blanco), franjas de brocha amarillas, sombras desplazadas amarillas y tipografía itálica pesada. Agusti, la mascota, es el favicon y el logo.
+
 | Token | Hex | Uso |
 |---|---|---|
-| `--tiza` | `#F7F8F4` | Fondo |
-| `--tinta` | `#18231D` | Texto (≈15:1) |
-| `--pasto` | `#1F5B3A` | Mapa-cancha y progreso |
-| `--cono` | `#FF6B1A` | Único acento (con texto tinta encima) |
-| `--cono-oscuro` | `#B8400E` | Acento como texto o link (≥ 4.5:1) |
-| `--linea` | `#D9DED6` | Bordes |
+| `--navy` | `#031A40` | Header, footer, hero, cancha |
+| `--royal` | `#0A3A8C` | Azul UA: links, completados |
+| `--yellow` | `#FFE100` | Único acento: actual, CTA, brocha (siempre con texto navy) |
+| `--bg` | `#F3F5FA` | Fondo de lectura |
+| `--ink` | `#0B1A3A` | Texto (≈16:1) |
+| `--line` | `#D3DAE8` | Bordes |
 
-- **Tipografía:** Archivo (una familia, eje de ancho). Títulos condensados 750, cuerpo 17 px / 1.6, máximo 68 caracteres por línea, cifras tabulares.
+- **Tipografía:** Archivo (una familia, ejes de ancho e itálica). Títulos itálicos condensados 800, cuerpo 17 px / 1.6, máximo 68 caracteres por línea, cifras tabulares.
 - **Motion:** una sola animación orquestada (el disco entra a la zona de anotación). Todo respeta `prefers-reduced-motion`.
 - **Copy:** sentence case, verbos que dicen lo que pasa ("Completar lección", "Siguiente lección").
 
