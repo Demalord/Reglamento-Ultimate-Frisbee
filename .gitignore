@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase simulado para pruebas locales (npx vite --config vite.mock.config.ts)
+.mock/
+vite.mock.config.ts

@@ -46,7 +46,7 @@ export function QuizPanel({ moduleId }: { moduleId?: number }) {
               <>
                 <span className="quiz-card-meta">
                   <span className="status-pill is-open"><span aria-hidden="true">●</span> Abierto</span>{' '}
-                  {it.quiz.questions.length} preguntas{it.quiz.timeLimitMin ? `, ${it.quiz.timeLimitMin} minutos` : ''}. Un intento.
+                  {it.quiz.questions.length} preguntas{it.quiz.timeLimitMin ? `, ${it.quiz.timeLimitMin} ${it.quiz.timeLimitMin === 1 ? 'minuto' : 'minutos'}` : ''}. Un intento.
                 </span>
                 <Link to={`/quiz/${it.m.id}`} className="btn btn-primary">Presentar quiz</Link>
               </>

@@ -248,7 +248,10 @@ export async function getUsers() {
 export function formatDay(iso: string | null) {
   if (!iso) return ''
   const [y, m, d] = iso.split('-').map(Number)
-  return new Date(y, m - 1, d).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })
+  const date = new Date(y, m - 1, d)
+  const weekday = date.toLocaleDateString('es-CO', { weekday: 'long' })
+  const month = date.toLocaleDateString('es-CO', { month: 'long' })
+  return `${weekday} ${d} de ${month}`
 }
 
 /** Fecha local de hoy en formato ISO corto. */

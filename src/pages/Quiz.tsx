@@ -40,6 +40,8 @@ function shuffled(n: number) {
   }
   return a
 }
+const minutesLabel = (n: number) => `${n} ${n === 1 ? 'minuto' : 'minutos'}`
+
 const mmss = (ms: number) => {
   const s = Math.max(0, Math.ceil(ms / 1000))
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
@@ -105,12 +107,17 @@ function QuizRunner({ quiz, uid, name }: { quiz: QuizDoc; uid: string; name: str
     [key],
   )
 
-  const remaining = draft && limitMs ? draft.startedAt + limitMs - now : null
+  const remaining = draft && limitMs ? Math.min(limitMs, draft.startedAt + limitMs - now) : null
   const timedOut = remaining !== null && remaining <= 0
+
+  // Candado síncrono: evita un doble envío (doble clic, o el envío automático por tiempo
+  // disparándose dos veces). El estado `sending` llega tarde para eso.
+  const sentRef = useRef(false)
 
   const send = useCallback(
     async (byTimeout: boolean) => {
-      if (!draft || sending) return
+      if (!draft || sentRef.current) return
+      sentRef.current = true
       setSending(true)
       setError(null)
       try {
@@ -120,10 +127,11 @@ function QuizRunner({ quiz, uid, name }: { quiz: QuizDoc; uid: string; name: str
       } catch (e) {
         console.error(e)
         setError('No se pudo enviar el quiz. Revisa tu conexión e inténtalo de nuevo; tus respuestas siguen guardadas.')
+        sentRef.current = false
         setSending(false)
       }
     },
-    [draft, sending, uid, name, quiz, key, navigate],
+    [draft, uid, name, quiz, key, navigate],
   )
 
   // Reloj: un tic por segundo mientras haya tiempo límite
@@ -164,7 +172,7 @@ function QuizRunner({ quiz, uid, name }: { quiz: QuizDoc; uid: string; name: str
         </header>
         <ul className="quiz-rules">
           <li><strong>{total} preguntas</strong> de opción múltiple.</li>
-          {quiz.timeLimitMin && <li><strong>{quiz.timeLimitMin} minutos</strong>. Si se acaba el tiempo, se envía con lo que hayas respondido.</li>}
+          {quiz.timeLimitMin && <li><strong>{minutesLabel(quiz.timeLimitMin)}</strong>. Si se acaba el tiempo, se envía con lo que hayas respondido.</li>}
           <li><strong>Un solo intento.</strong> Puedes moverte entre preguntas y cambiar respuestas antes de enviar.</li>
           <li>Las respuestas correctas y las explicaciones las ves al final.</li>
         </ul>

@@ -649,7 +649,6 @@
 .bar-label { grid-area: label; font-size: var(--fs-sm); font-weight: 600; }
 .bar-track { grid-area: track; height: 0.75rem; background: var(--bg-2); border-radius: 4px; overflow: hidden; }
 .bar-fill { display: block; height: 100%; background: var(--navy); border-radius: 0 4px 4px 0; transition: width 0.6s ease; }
-.bar-row.is-flag .bar-fill { background: var(--royal); }
 .bar-value { grid-area: value; font-size: var(--fs-sm); font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .bar-flag { color: var(--error); }
 

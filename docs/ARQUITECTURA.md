@@ -98,16 +98,16 @@ users/{uid}
   lastLesson: string | null
   failedChecks: { "m1_l4": 2 }       // fallos por lección; se borra al completar o reiniciar
 
-schedule/{moduleId}                 // anuncio visible para todos (fase 3)
+schedule/{moduleId}                 // anuncio visible para todos
   moduleId, opensOn: "2026-11-05", note
 
-quizzes/{moduleId}                  // 1 quiz por módulo, invisible si active=false (fase 3)
-  moduleId, title, active, timeLimitMin?
+quizzes/{moduleId}                  // 1 quiz por módulo, invisible si active=false
+  moduleId, title, active, timeLimitMin, activatedAt
   questions: [{ prompt, options[], correct, lessonId, ruleRef, explanation }]
 
-results/{uid}_{moduleId}            // 1 intento por estudiante por quiz (fase 3)
-  uid, name, moduleId, score, total, submittedAt
-  answers: [{ q, selected, correct }]
+results/{uid}_{moduleId}            // 1 intento por estudiante por quiz
+  uid, name, moduleId, score, total, timedOut, submittedAt
+  answers: [{ prompt, selected, correctAnswer, correct, explanation, ruleRef, lessonId }]
   byLesson: { "m2.l4": [aciertos, total], ... }
 ```
 
@@ -119,20 +119,27 @@ results/{uid}_{moduleId}            // 1 intento por estudiante por quiz (fase 3
 /#/modulo/:m                     lista de lecciones con estado
 /#/modulo/:m/leccion/:id         lección guiada
 /#/glosario
-/#/quiz/:m                       presentar quiz (fase 3)
-/#/quiz/:m/resultado             puntaje con gráfico (fase 3)
+/#/quiz/:m                       presentar quiz
+/#/quiz/:m/resultado             puntaje con gráfico
 /#/admin                         resumen del equipo
-/#/admin/estudiante/:uid         detalle por estudiante (fase 4)
-/#/admin/quiz/:m                 activar, calendario, estadísticas, CSV (fase 4)
+/#/admin/estudiante/:uid         detalle por estudiante
+/#/admin/quiz/:m                 abrir, calendario, estadísticas, CSV
 ```
 
 ## Quizzes
 
-- Cada módulo tiene su quiz. El admin publica la fecha en `schedule/{m}` para que el equipo se prepare y activa `quizzes/{m}.active` ese día.
-- Mientras `active == false`, las rules no dejan leer el documento: las preguntas no llegan al navegador del estudiante.
-- La calificación es en el cliente (equipo de confianza).
-- **Pantalla de resultado:** anillo con el puntaje + barras de aciertos por lección (`byLesson`) con enlace a repasar los temas con menos de 60 %.
-- **Admin:** matriz estudiantes × módulos, % de aciertos por pregunta, quién falta, reinicio de intento y CSV.
+- **Banco de preguntas** en `src/content/quizBank.ts` (10 por módulo, distintas a las de las lecciones). Solo lo carga el panel admin (import diferido). Al **abrir** un quiz, sus preguntas se copian a `quizzes/{m}`; los estudiantes las leen de ahí.
+- Mientras `active == false`, las rules no dejan leer `quizzes/{m}`: las preguntas no llegan al navegador del estudiante. El cliente consulta con `where('active', '==', true)`.
+- **Calendario** en `schedule/{m}`: fecha y nota, visibles para todos. El quiz no se abre solo: el admin lo abre ese día.
+- **Presentar:** una pregunta a la vez, sin feedback hasta el final, opciones barajadas, navegación libre, tiempo límite opcional (al agotarse se envía solo). El borrador vive en `localStorage` para sobrevivir a una recarga; un candado (`useRef`) impide el doble envío.
+- **Calificación** en el cliente (equipo de confianza). El resultado guarda cada respuesta con su texto, para poder revisarla aunque el quiz se cierre.
+- **Un intento:** el ID `{uid}_{m}` y la regla `create` sin `update` lo garantizan. El admin puede borrar el intento.
+- **Pantalla de resultado:** anillo con el puntaje, estado Aprobado / Por reforzar (umbral 60 %), barras de aciertos por lección y enlaces a repasar.
+- **Admin:** KPIs, estado de los 4 quizzes, matriz estudiantes × quizzes, y por quiz: abrir/cerrar, anuncio, promedio, histograma, % de aciertos por pregunta, tabla por estudiante, reinicio de intento y CSV. Detalle por estudiante con progreso y resultados.
+
+### Pruebas locales sin Firebase
+
+`.mock/` (fuera de git) tiene versiones en memoria de `firebase/app`, `firebase/auth` y `firebase/firestore`, con datos de ejemplo y las restricciones clave de las rules. `npx vite --config vite.mock.config.ts` levanta la app completa; `?as=s3` (estudiante) o `?as=adm` (admin) elige el usuario.
 
 ## Sistema de diseño
 

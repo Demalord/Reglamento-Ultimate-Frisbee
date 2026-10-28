@@ -6,7 +6,13 @@ import { DEFAULT_TIME_LIMIT_MIN, QUIZ_BANK } from '../../content/quizBank'
 import { activateQuiz, deactivateQuiz, formatDay, PASS_RATIO, resetAttempt, saveSchedule } from '../../lib/quizzes'
 import { useAdminData } from './useAdminData'
 
+/** Una instancia por módulo: el formulario y los mensajes no se arrastran entre quizzes. */
 export function AdminQuiz() {
+  const { moduleId } = useParams()
+  return <AdminQuizView key={moduleId} />
+}
+
+function AdminQuizView() {
   const { moduleId } = useParams()
   const m = Number(moduleId)
   const mod = getModule(m)
@@ -101,7 +107,7 @@ export function AdminQuiz() {
           <>
             <p>
               <span className="status-pill is-open">● Abierto</span>{' '}
-              {quiz.timeLimitMin ? `${quiz.timeLimitMin} minutos.` : 'Sin límite de tiempo.'} {results.length}/{students.length} lo presentaron.
+              {quiz.timeLimitMin ? `${quiz.timeLimitMin} ${quiz.timeLimitMin === 1 ? 'minuto' : 'minutos'}.` : 'Sin límite de tiempo.'} {results.length}/{students.length} lo presentaron.
             </p>
             <button type="button" className="btn btn-secondary" onClick={deactivate} disabled={busy !== null}>
               {busy === 'deactivate' ? 'Cerrando…' : 'Cerrar quiz'}

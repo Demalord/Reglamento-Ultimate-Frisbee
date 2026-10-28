@@ -45,6 +45,15 @@ npm run dev
 
 La app usa rutas con `#` (`/#/modulo/2`) y `base: './'`, así que funciona con cualquier nombre de repo sin configuración extra.
 
+## Cómo se usan los quizzes (admin)
+
+1. **Admin → Quizzes → Gestionar** en el módulo que quieras.
+2. **Anuncio:** pon la fecha y una nota. El equipo la ve en el inicio y en el módulo para prepararse.
+3. Ese día, **Abrir quiz** (eliges el tiempo límite). Desde ahí aparece a los estudiantes.
+4. Cada estudiante lo presenta **una vez** y ve su resultado con el desglose por tema.
+5. En la misma pantalla ves el promedio, la distribución de puntajes, el % de aciertos por pregunta y quién falta. **Exportar CSV** descarga la tabla.
+6. **Cerrar quiz** cuando termine el plazo. Los resultados se conservan. **Reiniciar intento** borra el de un estudiante para que lo repita.
+
 ## Estructura
 
 ```
@@ -56,8 +65,11 @@ src/
 ├─ content/manifest.ts    orden oficial de módulos y lecciones
 ├─ content/moduloN.ts     contenido de cada módulo (lecciones + repaso)
 ├─ content/glosario.ts    definiciones del reglamento
+├─ content/quizBank.ts    preguntas de los quizzes (solo las carga el panel admin)
+├─ lib/quizzes.ts         quizzes, calendario y resultados en Firestore
 ├─ components/            Layout, FieldMap (la cancha), ProgressBar
-└─ pages/                 Login, Home, Modulo, Leccion, Admin, Glosario
+└─ pages/                 Login, Home, Modulo, Leccion, Repaso, Quiz, QuizResult, Glosario
+   └─ admin/              AdminHome, AdminQuiz, AdminStudent
 firestore.rules           seguridad de la base de datos
 ```
 
@@ -70,8 +82,8 @@ firestore.rules           seguridad de la base de datos
   - [x] Módulo 2: Flujo del juego
   - [x] Módulo 3: Posesión, límites y anotación
   - [x] Módulo 4: Llamadas, faltas y violaciones
-- [ ] **Fase 3:** quizzes por módulo, calendario y pantalla de resultados con gráfico
-- [ ] **Fase 4:** panel admin completo (matriz de resultados, detalle por estudiante y por quiz, CSV)
+- [x] **Fase 3:** quizzes por módulo, calendario y pantalla de resultados con gráfico
+- [x] **Fase 4:** panel admin completo (matriz de resultados, detalle por estudiante y por quiz, CSV)
 - [ ] **Fase 5:** pulido final
 
 ## Licencia del contenido
