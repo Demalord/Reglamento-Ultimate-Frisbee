@@ -8,10 +8,27 @@ export function Glosario() {
   const [q, setQ] = useState('')
 
   const sorted = useMemo(() => [...GLOSARIO].sort((a, b) => a.term.localeCompare(b.term, 'es')), [])
+  // Ordena por relevancia: nombre exacto > empieza por > contiene > solo en la definición.
+  // Se compara en español y en inglés; los empates conservan el orden alfabético.
   const filtered = useMemo(() => {
     const k = slugify(q)
     if (!k) return sorted
-    return sorted.filter((g) => slugify(`${g.term} ${g.en} ${g.definition}`).includes(k))
+    const score = (name: string) => {
+      const n = slugify(name)
+      if (n === k) return 0
+      if (n.startsWith(k)) return 1
+      if (n.split('-').some((w) => w.startsWith(k))) return 2
+      if (n.includes(k)) return 3
+      return Infinity
+    }
+    return sorted
+      .map((g) => {
+        const s = Math.min(score(g.term), score(g.en))
+        return { g, s: s !== Infinity ? s : slugify(g.definition).includes(k) ? 4 : Infinity }
+      })
+      .filter((x) => x.s !== Infinity)
+      .sort((a, b) => a.s - b.s)
+      .map((x) => x.g)
   }, [q, sorted])
 
   // Llegando desde un término de una lección: baja hasta él y lo resalta
