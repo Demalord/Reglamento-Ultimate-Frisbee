@@ -24,10 +24,10 @@ Web para que el equipo estudie las **WFDF Rules of Ultimate 2025–2028** en 4 m
 Edita **solo** [`src/config.ts`](src/config.ts):
 
 - `firebaseConfig`: pega lo que copiaste en el paso 6 (no es secreto, puede ir en el repo).
-- `ADMIN_EMAILS`: correos de los admins.
+- `OWNER_EMAILS`: tus correos (dueño). El dueño es admin siempre y es el único que puede dar o quitar admin.
 - `TEAM_NAME`: nombre del equipo.
 
-Si cambias los admins, actualiza también la lista en `isAdmin()` de `firestore.rules` y vuelve a publicar las reglas.
+Si cambias los correos del dueño, actualiza también la lista en `isOwner()` de `firestore.rules` y vuelve a publicar las reglas. Los demás admins **no** se configuran aquí: se dan desde **Admin → Administradores**.
 
 ### 3. Correr en local
 

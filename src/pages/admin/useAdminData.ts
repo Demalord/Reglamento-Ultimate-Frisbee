@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ADMIN_EMAILS } from '../../config'
+import { OWNER_EMAILS } from '../../config'
+import { useAdmins } from '../../lib/admins'
 import { getUsers, useAllQuizzes, useAllResults, useSchedule, type ResultDoc } from '../../lib/quizzes'
 
 export interface Student {
@@ -19,6 +20,7 @@ export function useAdminData() {
   const quizzes = useAllQuizzes()
   const results = useAllResults()
   const schedule = useSchedule()
+  const admins = useAdmins()
 
   useEffect(() => {
     getUsers()
@@ -29,11 +31,12 @@ export function useAdminData() {
       })
   }, [])
 
-  // Los admins no cuentan como estudiantes en estadísticas
-  const students = useMemo(
-    () => users?.filter((u) => !ADMIN_EMAILS.includes(u.email.toLowerCase())) ?? null,
-    [users],
-  )
+  // Dueño y admins no cuentan como estudiantes en las estadísticas (tienen todo desbloqueado)
+  const students = useMemo(() => {
+    if (!users || !admins) return null
+    const staff = new Set([...OWNER_EMAILS, ...admins.map((a) => a.email)])
+    return users.filter((u) => !staff.has(u.email.toLowerCase()))
+  }, [users, admins])
 
   /** results[moduleId][uid] */
   const byModule = useMemo(() => {
@@ -42,7 +45,7 @@ export function useAdminData() {
     return map
   }, [results])
 
-  const loading = !error && (users === null || quizzes === null || results === null || schedule === null)
+  const loading = !error && (users === null || quizzes === null || results === null || schedule === null || admins === null)
 
-  return { users, students, quizzes, results, schedule, byModule, loading, error }
+  return { users, students, admins, quizzes, results, schedule, byModule, loading, error }
 }

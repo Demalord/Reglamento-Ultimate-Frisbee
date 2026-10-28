@@ -28,14 +28,18 @@ flowchart LR
 
 ## Roles
 
-| | Estudiante | Admin |
-|---|---|---|
-| Lecciones | En orden, con desbloqueo | Todo desbloqueado |
-| Quizzes | Solo los activos | Todos + activar/desactivar |
-| Resultados | Solo los suyos | De todo el equipo |
-| Progreso de otros | No | Sí |
+| | Estudiante | Admin | Dueño |
+|---|---|---|---|
+| Lecciones | En orden, con desbloqueo | Todo desbloqueado | Todo desbloqueado |
+| Quizzes | Solo los abiertos | Abrir, cerrar, anunciar | Igual que admin |
+| Resultados | Solo los suyos | De todo el equipo | De todo el equipo |
+| Dar o quitar admin | No | **No** | **Sí** |
 
-Los admins se definen por correo en `src/config.ts` y en `isAdmin()` de `firestore.rules` (ambos deben coincidir).
+- **Dueño:** correos fijos en `OWNER_EMAILS` (`src/config.ts`) y en `isOwner()` (`firestore.rules`). Deben coincidir.
+- **Admin:** cualquier correo con documento en `admins/{correo}`. Lo crea o borra el dueño desde **Admin → Administradores**; puede ser alguien que aún no ha entrado.
+- Las rules hacen cumplir la jerarquía: `admins/` solo lo escribe `isOwner()`, aunque un admin intente escribir por fuera de la página. `isAdmin()` = dueño, o correo verificado con documento en `admins/`.
+- El cambio de rol se ve en vivo, sin recargar (el cliente escucha `admins/{su correo}`).
+- Dueño y admins no cuentan en las estadísticas del equipo.
 
 ## Progresión guiada
 
@@ -91,6 +95,9 @@ Cada módulo es un archivo TypeScript (`src/content/moduloN.ts`) registrado en `
 ## Modelo de datos (Firestore)
 
 ```
+admins/{correo}                     // quien tiene documento aquí es admin; solo el dueño escribe
+  email, name, grantedBy, grantedAt
+
 users/{uid}
   name, email, photoURL, createdAt, lastSeenAt
   completedLessons: string[]        // ["m1.l1", ...] fuente de verdad del desbloqueo

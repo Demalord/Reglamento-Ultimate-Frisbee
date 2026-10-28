@@ -14,9 +14,10 @@ export const firebaseConfig = {
   appId: '1:625485318752:web:be8194d600c0ad6d529105',
 }
 
-// 2. Correos de los administradores (en minúscula).
-//    IMPORTANTE: mantén esta lista igual a la de firestore.rules → isAdmin().
-export const ADMIN_EMAILS: string[] = [
+// 2. Correos del dueño (en minúscula). Son admin siempre y son los ÚNICOS que pueden
+//    dar o quitar admin a otras personas, desde Admin → Administradores.
+//    IMPORTANTE: mantén esta lista igual a la de firestore.rules → isOwner().
+export const OWNER_EMAILS: string[] = [
   'diego.mahechar@uniagustiniana.edu.co',
   'diegomahereyes@gmail.com',
 ]

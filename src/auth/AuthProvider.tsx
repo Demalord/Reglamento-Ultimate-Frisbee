@@ -13,7 +13,7 @@ import {
   updateDoc,
 } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../lib/firebase'
-import { ADMIN_EMAILS } from '../config'
+import { OWNER_EMAILS } from '../config'
 
 export interface UserProfile {
   name: string
@@ -31,6 +31,9 @@ export const checkKey = (lessonId: string) => lessonId.replace(/\./g, '_')
 interface AuthState {
   user: User | null
   profile: UserProfile | null
+  /** Dueño: admin fijo que además puede dar y quitar admin. */
+  isOwner: boolean
+  /** Dueño o alguien con documento en admins/{correo}. */
   isAdmin: boolean
   loading: boolean
   done: Set<string>
@@ -67,17 +70,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  // ¿Tiene documento en admins/{correo}? null = todavía no se sabe
+  const [grantedAdmin, setGrantedAdmin] = useState<boolean | null>(null)
 
   useEffect(() => {
     let unsubProfile: (() => void) | undefined
+    let unsubAdmin: (() => void) | undefined
     const unsubAuth = onAuthStateChanged(auth, async (u) => {
       unsubProfile?.()
+      unsubAdmin?.()
       setUser(u)
       if (!u) {
         setProfile(null)
+        setGrantedAdmin(null)
         setLoading(false)
         return
       }
+      // En vivo: si el dueño da o quita admin, el cambio se ve sin recargar
+      const email = (u.email ?? '').toLowerCase()
+      unsubAdmin = onSnapshot(
+        doc(db, 'admins', email || '_'),
+        (snap) => setGrantedAdmin(snap.exists()),
+        () => setGrantedAdmin(false),
+      )
       try {
         await ensureUserDoc(u)
       } catch (err) {
@@ -97,17 +112,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
     return () => {
       unsubProfile?.()
+      unsubAdmin?.()
       unsubAuth()
     }
   }, [])
 
   const value = useMemo<AuthState>(() => {
     const email = (user?.email ?? '').toLowerCase()
+    const isOwner = OWNER_EMAILS.includes(email)
     return {
       user,
       profile,
-      loading,
-      isAdmin: ADMIN_EMAILS.includes(email),
+      // Espera también a saber si es admin, para que los guards no redirijan antes de tiempo
+      loading: loading || (!!user && !isOwner && grantedAdmin === null),
+      isOwner,
+      isAdmin: isOwner || grantedAdmin === true,
       done: new Set(profile?.completedLessons ?? []),
       signIn: async () => {
         await signInWithPopup(auth, googleProvider)
@@ -139,7 +158,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         })
       },
     }
-  }, [user, profile, loading])
+  }, [user, profile, loading, grantedAdmin])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

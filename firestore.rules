@@ -9,12 +9,31 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Mantener igual a ADMIN_EMAILS en src/config.ts (en minúscula).
-    function isAdmin() {
-      return signedIn() && request.auth.token.email.lower() in [
+    function myEmail() {
+      return request.auth.token.email.lower();
+    }
+
+    // Dueño: puede dar y quitar admin. Mantener igual a OWNER_EMAILS en src/config.ts (en minúscula).
+    function isOwner() {
+      return signedIn() && myEmail() in [
         'diego.mahechar@uniagustiniana.edu.co',
         'diegomahereyes@gmail.com'
       ];
+    }
+
+    // Admin: el dueño, o alguien a quien el dueño le dio admin (documento admins/{correo}).
+    function isAdmin() {
+      return isOwner()
+        || (signedIn()
+            && request.auth.token.email_verified == true
+            && exists(/databases/$(database)/documents/admins/$(myEmail())));
+    }
+
+    // ── Administradores ───────────────────────────────────
+    // Solo el dueño escribe aquí: los admins no pueden darle admin a nadie.
+    match /admins/{email} {
+      allow read: if isAdmin() || (signedIn() && email == myEmail());
+      allow write: if isOwner();
     }
 
     // ── Perfiles y progreso ───────────────────────────────

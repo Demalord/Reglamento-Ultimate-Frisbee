@@ -13,7 +13,7 @@ function initials(name: string) {
 }
 
 function UserMenu() {
-  const { profile, user, isAdmin, signOut } = useAuth()
+  const { profile, user, isAdmin, isOwner, signOut } = useAuth()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -54,7 +54,7 @@ function UserMenu() {
             <strong>{name}</strong>
             <br />
             {user?.email}
-            {isAdmin && ' · Admin'}
+            {isOwner ? ' · Dueño' : isAdmin ? ' · Admin' : ''}
           </p>
           <button type="button" className="btn btn-ghost" onClick={signOut}>
             Cerrar sesión

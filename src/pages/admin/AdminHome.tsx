@@ -3,13 +3,16 @@ import { ProgressBar } from '../../components/ProgressBar'
 import { MODULES, TOTAL_LESSONS } from '../../content/manifest'
 import { formatDay } from '../../lib/quizzes'
 import { countAllLessons } from '../../lib/progress'
+import { useAuth } from '../../auth/AuthProvider'
+import { AdminManagers } from './AdminManagers'
 import { useAdminData } from './useAdminData'
 
 export function AdminHome() {
-  const { students, quizzes, schedule, byModule, loading, error } = useAdminData()
+  const { users, students, admins, quizzes, schedule, byModule, loading, error } = useAdminData()
+  const { isOwner } = useAuth()
 
   if (error) return <p className="form-error" role="alert">{error}</p>
-  if (loading || !students || !quizzes || !schedule) {
+  if (loading || !users || !students || !admins || !quizzes || !schedule) {
     return <p className="muted" role="status">Cargando panel…</p>
   }
 
@@ -128,6 +131,8 @@ export function AdminHome() {
           </table>
         </div>
       </section>
+
+      {isOwner && <AdminManagers admins={admins} users={users} />}
     </div>
   )
 }
