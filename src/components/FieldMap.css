@@ -2,6 +2,7 @@
    La cancha. Proporciones reales del reglamento (sección 2):
    largo 100 m = zona de anotación 18 % + zona central 64 % + zona 18 %,
    ancho 37 m → relación 100 : 37.
+   En vertical se lee de arriba abajo: tu zona → M1…M4 → anotación.
    Usa container queries: cambia a horizontal cuando SU contenedor
    tiene ≥ 46em, sin importar el tamaño de la pantalla.
    ───────────────────────────────────────────────────────────── */
@@ -18,8 +19,8 @@
   --stripe-size: 12.5%;           /* 8 franjas de césped por eje */
   position: relative;
   display: flex;
-  flex-direction: column-reverse; /* vertical: ataque arriba */
-  background: repeating-linear-gradient(0deg, var(--navy) 0 var(--stripe-size), var(--stripe) var(--stripe-size) calc(var(--stripe-size) * 2));
+  flex-direction: column; /* vertical: tu zona arriba, anotación abajo (orden visual = orden del DOM) */
+  background: repeating-linear-gradient(180deg, var(--navy) 0 var(--stripe-size), var(--stripe) var(--stripe-size) calc(var(--stripe-size) * 2));
   border: 3px solid var(--fline);
   border-radius: var(--radius);
   outline: 6px solid var(--navy);
@@ -57,8 +58,8 @@
   color: rgb(255 255 255 / 0.7);
   text-align: center;
 }
-.endzone-def { border-top: 3px solid var(--fline); }
-.endzone-att { border-bottom: 3px solid var(--fline); }
+.endzone-def { border-bottom: 3px solid var(--fline); }
+.endzone-att { border-top: 3px solid var(--fline); }
 .endzone-att.is-scored {
   color: var(--yellow);
   font-size: var(--fs-h3);
@@ -66,7 +67,7 @@
 }
 .endzone-disc { width: clamp(2.5rem, 10cqi, 3.5rem); animation: disc-in 0.9s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes disc-in {
-  from { transform: translateY(80px) rotate(-30deg) scale(0.6); opacity: 0; }
+  from { transform: translateY(-80px) rotate(-30deg) scale(0.6); opacity: 0; }
   to { transform: none; opacity: 1; }
 }
 
@@ -76,9 +77,9 @@
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column-reverse; /* M1 abajo, junto a tu zona */
+  flex-direction: column; /* M1 arriba, junto a tu zona; M4 junto a la anotación */
 }
-.band + .band { border-bottom: 1px dashed rgb(255 255 255 / 0.35); }
+.band + .band { border-top: 1px dashed rgb(255 255 255 / 0.35); }
 
 .band-inner {
   display: grid;
@@ -94,7 +95,10 @@
   color: inherit;
   text-decoration: none;
 }
-a.band-inner:hover { background: rgb(255 255 255 / 0.07); }
+/* Solo en dispositivos con puntero real: en iOS el :hover queda pegado tras tocar */
+@media (hover: hover) {
+  a.band-inner:hover { background: rgb(255 255 255 / 0.07); color: inherit; }
+}
 a.band-inner:focus-visible {
   box-shadow: inset 0 0 0 3px var(--navy), inset 0 0 0 6px var(--yellow);
   border-radius: 0;
@@ -148,13 +152,13 @@ a.band-inner:focus-visible {
   /* 18 % + 64 % + 18 % = 100 m de cancha */
   .endzone { flex: 0 0 18%; min-height: 0; writing-mode: vertical-rl; padding: 4% 2%; }
   /* rotada 180° para leer de abajo arriba; su borde izquierdo queda a la derecha (línea de gol) */
-  .endzone-def { border-top: 0; border-left: 3px solid var(--fline); transform: rotate(180deg); }
-  .endzone-att { border-bottom: 0; border-left: 3px solid var(--fline); }
+  .endzone-def { border-bottom: 0; border-left: 3px solid var(--fline); transform: rotate(180deg); }
+  .endzone-att { border-top: 0; border-left: 3px solid var(--fline); }
   .endzone-att.is-scored { writing-mode: horizontal-tb; font-size: clamp(1rem, 2cqi, 1.5rem); }
 
   .field-central { flex: 0 0 64%; flex-direction: row; }
   .band { flex: 0 0 25%; display: flex; min-width: 0; }   /* 4 módulos × 25 % */
-  .band + .band { border-bottom: 0; border-left: 1px dashed rgb(255 255 255 / 0.35); }
+  .band + .band { border-top: 0; border-left: 1px dashed rgb(255 255 255 / 0.35); }
 
   .band-inner {
     width: 100%;

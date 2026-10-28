@@ -117,7 +117,10 @@
   border-right: 4px solid var(--navy);
   transform: translateY(-50%) rotate(45deg);
 }
-.continue:hover { background: var(--bg-2); color: var(--ink); }
+@media (hover: hover) {
+  .continue:hover { background: var(--bg-2); color: var(--ink); }
+  a.lesson-inner:hover { background: var(--bg-2); }
+}
 .continue-label { justify-self: start; font-size: var(--fs-xs); }
 .continue-title { font-size: var(--fs-h3); font-weight: 800; font-style: italic; font-stretch: 82%; line-height: 1.2; }
 .continue-meta { font-size: var(--fs-sm); color: var(--ink-2); }
@@ -161,7 +164,6 @@
   color: var(--ink);
   text-decoration: none;
 }
-a.lesson-inner:hover { background: var(--bg-2); }
 .lesson-body { flex: 1 1 12rem; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .lesson-title { font-weight: 700; }
 .lesson-meta { font-size: var(--fs-sm); color: var(--ink-2); }

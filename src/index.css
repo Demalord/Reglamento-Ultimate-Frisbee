@@ -101,7 +101,9 @@ h3 { font-size: var(--fs-h3); }
 p { margin: 0 0 var(--space-4); max-width: var(--measure); text-wrap: pretty; }
 
 a { color: var(--link); text-underline-offset: 0.18em; }
-a:hover { color: var(--ink); }
+@media (hover: hover) {
+  a:hover { color: var(--ink); }
+}
 
 img { display: block; max-width: 100%; height: auto; }
 
