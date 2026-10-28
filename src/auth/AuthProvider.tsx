@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../lib/firebase'
 import { OWNER_EMAILS } from '../config'
+import { formatName } from '../lib/names'
 
 export interface UserProfile {
   name: string
@@ -54,7 +55,7 @@ async function ensureUserDoc(u: User) {
   const ref = doc(db, 'users', u.uid)
   const snap = await getDoc(ref)
   const base = {
-    name: u.displayName ?? u.email ?? 'Sin nombre',
+    name: formatName(u.displayName) || u.email || 'Sin nombre',
     email: (u.email ?? '').toLowerCase(),
     photoURL: u.photoURL,
     lastSeenAt: serverTimestamp(),
@@ -101,7 +102,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       unsubProfile = onSnapshot(
         doc(db, 'users', u.uid),
         (snap) => {
-          setProfile(snap.exists() ? (snap.data() as UserProfile) : null)
+          const data = snap.exists() ? (snap.data() as UserProfile) : null
+          setProfile(data ? { ...data, name: formatName(data.name) || data.email } : null)
           setLoading(false)
         },
         (err) => {

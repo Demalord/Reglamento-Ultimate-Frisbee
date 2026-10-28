@@ -15,6 +15,7 @@ import {
 } from 'firebase/firestore'
 import { db } from './firebase'
 import type { Question } from '../content/types'
+import { formatName } from './names'
 
 // ─────────────────────────────────────────────────────────────
 // Modelo
@@ -144,7 +145,7 @@ export function useAllResults() {
     () =>
       onSnapshot(
         collection(db, 'results'),
-        (snap) => setResults(snap.docs.map((d) => d.data() as ResultDoc)),
+        (snap) => setResults(snap.docs.map((d) => { const r = d.data() as ResultDoc; return { ...r, name: formatName(r.name) } })),
         (err) => {
           console.error('results (admin)', err)
           setResults([])
@@ -236,7 +237,7 @@ export async function getUsers() {
   const snap = await getDocs(collection(db, 'users'))
   return snap.docs.map((d) => ({
     uid: d.id,
-    name: (d.get('name') as string) ?? '',
+    name: formatName(d.get('name') as string) || ((d.get('email') as string) ?? ''),
     email: (d.get('email') as string) ?? '',
     completedLessons: (d.get('completedLessons') as string[]) ?? [],
   }))

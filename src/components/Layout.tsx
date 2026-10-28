@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { TEAM_NAME } from '../config'
+import { formatName } from '../lib/names'
 
 function initials(name: string) {
   return name
@@ -30,7 +31,7 @@ function UserMenu() {
     }
   }, [open])
 
-  const name = profile?.name ?? user?.displayName ?? 'Tú'
+  const name = profile?.name || formatName(user?.displayName) || 'Tú'
 
   return (
     <div ref={ref}>

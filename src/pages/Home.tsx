@@ -6,14 +6,13 @@ import { ProgressBar } from '../components/ProgressBar'
 import { MODULES, TOTAL_LESSONS, rulesLabel } from '../content/manifest'
 import { countAllLessons, itemPath, nextItem } from '../lib/progress'
 import { TEAM_MOTTO } from '../config'
+import { firstName } from '../lib/names'
 
 export function Home() {
   const { profile, done, isAdmin } = useAuth()
   const next = nextItem(done)
   const lessonsDone = countAllLessons(done)
-  // Google a veces entrega el nombre en mayúsculas ("DIEGO"): se normaliza a "Diego"
-  const rawFirst = (profile?.name ?? '').trim().split(/\s+/)[0] ?? ''
-  const firstName = rawFirst ? rawFirst[0].toLocaleUpperCase('es') + rawFirst.slice(1).toLocaleLowerCase('es') : ''
+  const first = firstName(profile?.name)
   const started = done.size > 0
   const nextModule = next ? MODULES.find((m) => m.id === next.moduleId) : null
   const nextLessonMeta = next && nextModule ? nextModule.lessons.find((l) => l.id === next.id) : undefined
@@ -23,7 +22,7 @@ export function Home() {
       <div className="hero">
         <div>
           <span className="brush">{TEAM_MOTTO}</span>
-          <h1>{firstName ? `Hola, ${firstName}` : 'Hola'}</h1>
+          <h1>{first ? `Hola, ${first}` : 'Hola'}</h1>
           <p className="lede">
             {!next
               ? `Completaste las ${TOTAL_LESSONS} lecciones. Repasa cualquier módulo cuando quieras.`
