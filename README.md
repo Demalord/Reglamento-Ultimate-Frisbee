@@ -64,12 +64,12 @@ firestore.rules           seguridad de la base de datos
 ## Fases
 
 - [x] **Fase 1:** proyecto base, deploy, login con Google, recorrido con desbloqueo, panel admin con progreso
-- [ ] **Fase 2:** contenido de las 24 lecciones (pasos + pregunta de control) y glosario
+- [x] **Fase 2:** contenido de las 24 lecciones (pasos + pregunta de control) y glosario
   - [x] Motor de lecciones guiadas, repaso por módulo y glosario con tooltips
   - [x] Módulo 1: Fundamentos y Espíritu del Juego
   - [x] Módulo 2: Flujo del juego
-  - [ ] Módulo 3: Posesión, límites y anotación
-  - [ ] Módulo 4: Llamadas, faltas y violaciones
+  - [x] Módulo 3: Posesión, límites y anotación
+  - [x] Módulo 4: Llamadas, faltas y violaciones
 - [ ] **Fase 3:** quizzes por módulo, calendario y pantalla de resultados con gráfico
 - [ ] **Fase 4:** panel admin completo (matriz de resultados, detalle por estudiante y por quiz, CSV)
 - [ ] **Fase 5:** pulido final
