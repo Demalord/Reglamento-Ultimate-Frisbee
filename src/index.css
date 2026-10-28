@@ -1,48 +1,65 @@
-/* ─────────────────────────────────────────────
-   Tokens
-   ───────────────────────────────────────────── */
+/* ═════════════════════════════════════════════════════════════
+   Sistema responsive fluido
+   - Tipografía y espaciado escalan con clamp() entre 320px y 1440px
+     de viewport (sin saltos por breakpoint).
+   - Contenedores en porcentaje con tope en rem: min(100% - gutter, max).
+   - Breakpoints en em (respetan el zoom y el tamaño de fuente del usuario).
+   - Componentes complejos (la cancha) usan container queries: se adaptan
+     al ancho que les toca, no al de la pantalla.
+   - WCAG 2.2: 1.4.4 (texto al 200 %), 1.4.10 (reflow a 320 px sin scroll
+     horizontal), 1.4.12 (espaciado de texto), 2.5.8 (targets ≥ 24 px).
+   ═════════════════════════════════════════════════════════════ */
+
 :root {
-  /* Paleta del equipo (afiche Uniagustiniana) */
-  --bg: #f3f5fa;        /* fondo claro para lectura */
-  --bg-2: #e6ebf5;      /* superficies */
-  --ink: #0b1a3a;       /* texto principal: azul tinta (≈16:1) */
-  --ink-2: #45526e;     /* texto secundario (≥ 7:1 sobre bg) */
-  --line: #d3dae8;      /* bordes */
-  --navy: #031a40;      /* azul marino: header, cancha, hero */
-  --royal: #0a3a8c;     /* azul UA: progreso, completados */
-  --yellow: #ffe100;    /* amarillo: único acento (texto navy encima) */
-  --link: #0a3a8c;      /* links sobre fondo claro */
+  /* ── Paleta del equipo (afiche Uniagustiniana) ── */
+  --bg: #f3f5fa;
+  --bg-2: #e6ebf5;
+  --ink: #0b1a3a;       /* ≈16:1 sobre bg */
+  --ink-2: #45526e;     /* ≥ 7:1 sobre bg */
+  --line: #d3dae8;
+  --navy: #031a40;
+  --royal: #0a3a8c;
+  --yellow: #ffe100;    /* siempre con texto navy encima */
+  --link: #0a3a8c;
   --ok: #1a7f3a;
   --error: #c8102e;
 
   --font: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --fs-body: 1.0625rem;   /* 17px */
-  --fs-sm: 0.9375rem;
-  --fs-xs: 0.8125rem;
-  --fs-h3: 1.25rem;
-  --fs-h2: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
-  --fs-h1: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
 
-  --radius-sm: 6px;
-  --radius: 12px;
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
+  /* ── Escala tipográfica fluida (mín @320px → máx @1440px) ──
+     intercepto en rem + pendiente en vw, acotado con clamp().   */
+  --fs-xs: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);   /* 13 → 14 */
+  --fs-sm: clamp(0.9063rem, 0.88rem + 0.13vw, 1rem);       /* 14.5 → 16 */
+  --fs-body: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);      /* 16 → 18 */
+  --fs-lede: clamp(1.0625rem, 1rem + 0.27vw, 1.25rem);     /* 17 → 20 */
+  --fs-h3: clamp(1.125rem, 1.04rem + 0.45vw, 1.5rem);      /* 18 → 24 */
+  --fs-h2: clamp(1.5rem, 1.32rem + 0.89vw, 2.25rem);       /* 24 → 36 */
+  --fs-h1: clamp(2rem, 1.64rem + 1.79vw, 3.5rem);          /* 32 → 56 */
 
-  --header-h: 64px;
-  --measure: 68ch;
+  /* ── Espaciado fluido ── */
+  --space-1: clamp(0.25rem, 0.23rem + 0.09vw, 0.3125rem);
+  --space-2: clamp(0.5rem, 0.46rem + 0.18vw, 0.625rem);
+  --space-3: clamp(0.75rem, 0.71rem + 0.18vw, 0.875rem);
+  --space-4: clamp(1rem, 0.93rem + 0.36vw, 1.25rem);
+  --space-5: clamp(1.25rem, 1.11rem + 0.71vw, 1.75rem);
+  --space-6: clamp(1.75rem, 1.54rem + 1.07vw, 2.5rem);
+  --space-7: clamp(2.5rem, 2.14rem + 1.79vw, 4rem);
+
+  /* ── Layout ── */
+  --gutter: clamp(1rem, 4vw, 2.5rem);          /* margen lateral: 4 % del viewport */
+  --container: 72rem;                           /* ancho máximo de contenido */
+  --measure: 68ch;                              /* línea de lectura */
+  --header-h: clamp(3.5rem, 3.3rem + 1vw, 4.25rem);
+
+  --radius-sm: clamp(6px, 0.4rem, 8px);
+  --radius: clamp(10px, 0.7rem + 0.3vw, 16px);
+  --target: 2.75rem;                            /* 44px, escala con la fuente */
   --focus: 0 0 0 3px var(--bg), 0 0 0 6px var(--ink);
 
   color-scheme: light;
 }
 
-/* ─────────────────────────────────────────────
-   Base
-   ───────────────────────────────────────────── */
+/* ═══ Base ═══ */
 *,
 *::before,
 *::after {
@@ -50,9 +67,9 @@
 }
 
 html {
-  /* 2.4.11 Focus not obscured: el header sticky nunca tapa el foco */
-  scroll-padding-top: calc(var(--header-h) + var(--space-4));
+  scroll-padding-top: calc(var(--header-h) + var(--space-4)); /* 2.4.11 */
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -63,6 +80,7 @@ body {
   font-size: var(--fs-body);
   line-height: 1.6;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
 }
 
 h1,
@@ -71,20 +89,21 @@ h3 {
   font-stretch: 80%;
   font-style: italic;
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.08;
   letter-spacing: -0.01em;
   margin: 0 0 var(--space-3);
+  text-wrap: balance;
 }
 h1 { font-size: var(--fs-h1); }
 h2 { font-size: var(--fs-h2); }
 h3 { font-size: var(--fs-h3); }
 
-p { margin: 0 0 var(--space-4); max-width: var(--measure); }
+p { margin: 0 0 var(--space-4); max-width: var(--measure); text-wrap: pretty; }
 
 a { color: var(--link); text-underline-offset: 0.18em; }
 a:hover { color: var(--ink); }
 
-img { max-width: 100%; display: block; }
+img { display: block; max-width: 100%; height: auto; }
 
 :focus-visible {
   outline: none;
@@ -106,50 +125,52 @@ img { max-width: 100%; display: block; }
 
 .skip-link {
   position: absolute;
-  left: var(--space-4);
+  left: var(--gutter);
   top: -100px;
   z-index: 100;
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--yellow);
+  color: var(--navy);
+  font-weight: 700;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
 }
 .skip-link:focus { top: var(--space-2); }
 
-/* ─────────────────────────────────────────────
-   Botones (2.5.8: mínimo 44px de alto)
-   ───────────────────────────────────────────── */
+/* ═══ Botones (2.5.8) ═══ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 44px;
-  padding: 0 var(--space-5);
+  min-height: var(--target);
+  max-width: 100%;
+  padding: var(--space-2) var(--space-5);
   border-radius: var(--radius-sm);
   border: 2px solid transparent;
   font: inherit;
   font-weight: 800;
   font-style: italic;
   font-stretch: 85%;
-  font-size: 1rem;
+  font-size: var(--fs-body);
+  line-height: 1.2;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
 }
-/* Amarillo con texto navy, inclinado como los bloques del afiche */
 .btn-primary { background: var(--yellow); color: var(--navy); box-shadow: 3px 3px 0 var(--navy); }
 .btn-primary:hover { background: #fff04d; color: var(--navy); }
 .btn-primary:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--navy); }
 .btn-secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
 .btn-secondary:hover { background: var(--bg-2); color: var(--ink); }
-.btn-ghost { background: transparent; color: var(--ink); padding: 0 var(--space-3); font-style: normal; font-weight: 600; font-stretch: 100%; }
+.btn-ghost { background: transparent; color: var(--ink); padding-inline: var(--space-3); font-style: normal; font-weight: 600; font-stretch: 100%; }
 .btn-ghost:hover { background: var(--bg-2); color: var(--ink); }
 .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
 
-/* Franja de brocha: el recurso gráfico del afiche (detrás de etiquetas clave) */
+/* Franja de brocha (recurso del afiche) */
 .brush {
   display: inline-block;
+  max-width: 100%;
   padding: 0.1em 0.6em 0.15em;
   color: var(--navy);
   background: var(--yellow);
@@ -159,11 +180,8 @@ img { max-width: 100%; display: block; }
   clip-path: polygon(2% 8%, 22% 0, 52% 6%, 80% 0, 99% 10%, 97% 52%, 100% 92%, 70% 100%, 40% 93%, 12% 100%, 0 88%, 3% 46%);
   transform: rotate(-2deg);
 }
-.brush-white { background: #fff; }
 
-/* ─────────────────────────────────────────────
-   Layout
-   ───────────────────────────────────────────── */
+/* ═══ App shell ═══ */
 .app {
   min-height: 100dvh;
   display: flex;
@@ -174,45 +192,62 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 10;
-  height: var(--header-h);
+  padding-top: env(safe-area-inset-top);
   background: var(--navy);
   color: #fff;
   border-bottom: 4px solid var(--yellow);
 }
 .header-inner {
-  height: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 var(--space-4);
+  position: relative;
+  min-height: var(--header-h);
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 .header :focus-visible { box-shadow: 0 0 0 3px var(--navy), 0 0 0 6px var(--yellow); }
+
 .brand {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  min-width: 0;          /* deja que el texto se recorte en pantallas angostas */
+  min-height: var(--target);
+  margin-right: auto;
   color: #fff;
   text-decoration: none;
   font-weight: 800;
   font-style: italic;
   font-stretch: 80%;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 0.93rem + 0.36vw, 1.25rem);
   line-height: 1.1;
-  margin-right: auto;
-  min-height: 44px;
 }
 .brand:hover { color: #fff; }
-.brand img { width: 38px; height: 38px; border-radius: 9px; flex: none; }
-.brand small { display: block; font-weight: 600; font-style: normal; font-stretch: 100%; font-size: var(--fs-xs); color: var(--yellow); line-height: 1.2; }
+.brand img {
+  width: clamp(2rem, 1.8rem + 1vw, 2.5rem);
+  aspect-ratio: 1;
+  border-radius: 22%;
+  flex: none;
+}
+.brand > span { min-width: 0; }
+.brand > span,
+.brand small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.brand small {
+  display: block;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: 100%;
+  font-size: var(--fs-xs);
+  color: var(--yellow);
+}
 
-.nav { display: flex; align-items: center; gap: var(--space-1); }
+.nav { display: flex; align-items: center; gap: var(--space-1); flex: none; }
 .nav a {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0 var(--space-3);
+  min-height: var(--target);
+  padding-inline: var(--space-3);
   border-radius: var(--radius-sm);
   color: #fff;
   text-decoration: none;
@@ -226,9 +261,10 @@ img { max-width: 100%; display: block; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
+  width: var(--target);
+  height: var(--target);
+  flex: none;
+  border-radius: 50%;
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -236,9 +272,9 @@ img { max-width: 100%; display: block; }
 }
 .avatar-btn img,
 .avatar-fallback {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
+  width: 78%;
+  height: 78%;
+  border-radius: 50%;
   border: 2px solid var(--yellow);
 }
 .avatar-fallback {
@@ -252,9 +288,9 @@ img { max-width: 100%; display: block; }
 
 .menu {
   position: absolute;
-  right: var(--space-4);
-  top: calc(var(--header-h) - 2px);
-  min-width: 220px;
+  right: 0;
+  top: calc(100% + 2px);
+  width: min(17rem, 100%);
   background: #fff;
   color: var(--ink);
   border: 1px solid var(--line);
@@ -262,46 +298,42 @@ img { max-width: 100%; display: block; }
   padding: var(--space-2);
   box-shadow: 0 8px 24px rgb(3 26 64 / 0.18);
 }
-.menu p { margin: var(--space-2) var(--space-3); font-size: var(--fs-xs); color: var(--ink-2); }
-.menu .btn { width: 100%; justify-content: flex-start; border-radius: var(--radius-sm); }
+.menu p { margin: var(--space-2) var(--space-3); font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }
+.menu .btn { width: 100%; justify-content: flex-start; }
 .menu :focus-visible { box-shadow: var(--focus); }
 
 .main {
   flex: 1;
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: var(--space-6) var(--space-4) var(--space-7);
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+  padding-block: var(--space-6) var(--space-7);
 }
+.main:focus { box-shadow: none; }
 
 .footer {
   background: var(--navy);
   color: rgb(255 255 255 / 0.8);
-  padding: var(--space-5) var(--space-4);
+  padding-block: var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom));
   font-size: var(--fs-xs);
 }
+.footer p { width: min(100% - 2 * var(--gutter), var(--container)); max-width: none; margin: 0 auto; }
 .footer a { color: var(--yellow); }
 .footer a:hover { color: #fff; }
 .footer :focus-visible { box-shadow: 0 0 0 3px var(--navy), 0 0 0 6px var(--yellow); }
-.footer p { max-width: 1080px; margin: 0 auto; }
 
-.center-screen {
-  min-height: 60vh;
-  display: grid;
-  place-items: center;
-}
+.center-screen { min-height: 60dvh; display: grid; place-items: center; }
 .spinner {
-  width: 28px;
-  height: 28px;
+  width: 1.75rem;
+  aspect-ratio: 1;
   border: 3px solid var(--line);
   border-top-color: var(--navy);
-  border-radius: 999px;
+  border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .muted { color: var(--ink-2); }
-.lede { font-size: 1.125rem; color: var(--ink-2); }
+.lede { font-size: var(--fs-lede); color: var(--ink-2); }
 
 .notice {
   border: 1px solid var(--line);
@@ -309,11 +341,16 @@ img { max-width: 100%; display: block; }
   border-radius: var(--radius);
   padding: var(--space-4) var(--space-5);
 }
-.notice code { font-size: 0.95em; }
 
-@media (max-width: 560px) {
-  .nav .nav-hide-sm { display: none; }
+/* ═══ Breakpoints del header (en em → respetan el zoom) ═══ */
+@media (max-width: 25em) {          /* < 400px: sin subtítulo */
   .brand small { display: none; }
+}
+@media (max-width: 35em) {          /* < 560px: "Inicio" lo cubre el logo */
+  .nav .nav-hide-sm { display: none; }
+}
+@media (max-width: 21.25em) {       /* < 340px o zoom alto: solo el logo */
+  .brand > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

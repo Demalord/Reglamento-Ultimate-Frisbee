@@ -20,6 +20,7 @@ export function FieldMap({ done, unlockAll }: { done: Set<string>; unlockAll: bo
   const allDone = MODULES.every((m) => moduleStatus(m, done) === 'completed')
 
   return (
+    <div className="field-wrap">
     <section className="field" aria-label="Tu recorrido por el reglamento">
       <div className="endzone endzone-def" aria-hidden="true">
         <span>Tu zona</span>
@@ -74,6 +75,7 @@ export function FieldMap({ done, unlockAll }: { done: Set<string>; unlockAll: bo
         )}
       </div>
     </section>
+    </div>
   )
 }
 

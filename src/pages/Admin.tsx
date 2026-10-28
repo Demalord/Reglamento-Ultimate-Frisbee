@@ -81,7 +81,7 @@ export function Admin() {
                       <ProgressBar value={done.size} max={TOTAL_LESSONS} label={`Progreso de ${r.name}`} />
                     </td>
                     {MODULES.map((m) => (
-                      <td key={m.id} className="num">
+                      <td key={m.id} className="num" data-label={`Módulo ${m.id}`}>
                         {countDone(m, done)}/{m.lessons.length}
                       </td>
                     ))}

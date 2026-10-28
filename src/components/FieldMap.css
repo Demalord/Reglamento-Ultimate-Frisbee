@@ -1,29 +1,40 @@
-/* Proporciones reales: zona central 64 m, zonas de anotación 18 m, ancho 37 m. */
+/* ─────────────────────────────────────────────────────────────
+   La cancha. Proporciones reales del reglamento (sección 2):
+   largo 100 m = zona de anotación 18 % + zona central 64 % + zona 18 %,
+   ancho 37 m → relación 100 : 37.
+   Usa container queries: cambia a horizontal cuando SU contenedor
+   tiene ≥ 46em, sin importar el tamaño de la pantalla.
+   ───────────────────────────────────────────────────────────── */
+
+.field-wrap {
+  container: field / inline-size;
+  /* deja espacio para el borde exterior y la sombra amarilla */
+  padding: 6px 12px 12px 6px;
+}
 
 .field {
   --fline: rgb(255 255 255 / 0.9);
   --stripe: #062659;
+  --stripe-size: 12.5%;           /* 8 franjas de césped por eje */
   position: relative;
   display: flex;
-  flex-direction: column-reverse; /* móvil: ataque arriba */
-  background:
-    repeating-linear-gradient(0deg, var(--navy) 0 48px, var(--stripe) 48px 96px);
+  flex-direction: column-reverse; /* vertical: ataque arriba */
+  background: repeating-linear-gradient(0deg, var(--navy) 0 var(--stripe-size), var(--stripe) var(--stripe-size) calc(var(--stripe-size) * 2));
   border: 3px solid var(--fline);
   border-radius: var(--radius);
   outline: 6px solid var(--navy);
   box-shadow: 10px 10px 0 -2px var(--yellow);
-  margin: 6px;
-  color: var(--bg);
+  color: #fff;
   overflow: hidden;
 }
 
-/* Conos en las esquinas del campo */
+/* Conos en las esquinas */
 .field::before,
 .field::after {
   content: '';
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: clamp(10px, 2.5cqi, 14px);
+  aspect-ratio: 1;
   background: var(--yellow);
   border-radius: 2px 2px 50% 50%;
   z-index: 2;
@@ -31,16 +42,18 @@
 .field::before { left: 6px; top: 6px; }
 .field::after { right: 6px; bottom: 6px; }
 
+/* ── Zonas de anotación ── */
 .endzone {
   display: grid;
   place-items: center;
-  min-height: 96px;
-  padding: var(--space-4);
+  /* vertical: alto proporcional al ancho (18 m de 37 m ≈ 49 %), con límites */
+  min-height: clamp(4.5rem, 30cqi, 7rem);
+  padding: 4%;
   font-stretch: 78%;
+  font-style: italic;
   font-weight: 700;
   font-size: var(--fs-sm);
   letter-spacing: 0.02em;
-  font-style: italic;
   color: rgb(255 255 255 / 0.7);
   text-align: center;
 }
@@ -51,12 +64,13 @@
   font-size: var(--fs-h3);
   gap: var(--space-2);
 }
-.endzone-disc { width: 48px; height: 48px; animation: disc-in 0.9s cubic-bezier(.2,.8,.2,1) both; }
+.endzone-disc { width: clamp(2.5rem, 10cqi, 3.5rem); animation: disc-in 0.9s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes disc-in {
   from { transform: translateY(80px) rotate(-30deg) scale(0.6); opacity: 0; }
   to { transform: none; opacity: 1; }
 }
 
+/* ── Zona central: los 4 módulos ── */
 .field-central {
   list-style: none;
   margin: 0;
@@ -64,7 +78,6 @@
   display: flex;
   flex-direction: column-reverse; /* M1 abajo, junto a tu zona */
 }
-
 .band + .band { border-bottom: 1px dashed rgb(255 255 255 / 0.35); }
 
 .band-inner {
@@ -74,10 +87,10 @@
     'num body'
     'num tag';
   align-items: center;
-  column-gap: var(--space-4);
+  column-gap: 5%;
   row-gap: var(--space-2);
-  padding: var(--space-5) var(--space-5);
-  min-height: 112px;
+  padding: var(--space-5) 6%;
+  min-height: 7rem;
   color: inherit;
   text-decoration: none;
 }
@@ -89,7 +102,8 @@ a.band-inner:focus-visible {
 
 .band-num {
   grid-area: num;
-  font-size: 3.5rem;
+  /* el número escala con el ancho de la cancha */
+  font-size: clamp(2.5rem, 14cqi, 4rem);
   font-weight: 800;
   font-style: italic;
   font-stretch: 70%;
@@ -97,8 +111,8 @@ a.band-inner:focus-visible {
   color: rgb(255 255 255 / 0.9);
   min-width: 1.2ch;
 }
-.band-body { grid-area: body; display: flex; flex-direction: column; gap: 2px; }
-.band-title { font-weight: 800; font-style: italic; font-stretch: 85%; font-size: 1.125rem; line-height: 1.2; }
+.band-body { grid-area: body; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.band-title { font-weight: 800; font-style: italic; font-stretch: 85%; font-size: clamp(1rem, 4.5cqi, 1.25rem); line-height: 1.2; }
 .band-meta { font-size: var(--fs-xs); color: rgb(255 255 255 / 0.8); }
 
 .band-tag {
@@ -111,41 +125,47 @@ a.band-inner:focus-visible {
   border-radius: 999px;
   font-size: var(--fs-xs);
   font-weight: 650;
+  white-space: nowrap;
 }
 .tag-current { background: var(--yellow); color: var(--navy); font-style: italic; font-weight: 800; }
 .tag-completed { background: #fff; color: var(--royal); }
-.tag-available { background: rgb(255 255 255 / 0.16); color: var(--bg); }
+.tag-available { background: rgb(255 255 255 / 0.16); color: #fff; }
 .tag-locked { background: rgb(0 0 0 / 0.3); color: rgb(255 255 255 / 0.85); }
 
 .band-current .band-inner { box-shadow: inset 6px 0 0 var(--yellow); }
 .band-locked .band-num,
 .band-locked .band-title { color: rgb(255 255 255 / 0.55); }
 
-/* Escritorio: cancha horizontal, ataque a la derecha */
-@media (min-width: 820px) {
+/* ── Cancha horizontal: cuando el contenedor tiene espacio ── */
+@container field (min-width: 46em) {
   .field {
     flex-direction: row;
-    background:
-      repeating-linear-gradient(90deg, var(--navy) 0 64px, var(--stripe) 64px 128px);
-    aspect-ratio: 100 / 37;
-    max-height: 420px;
+    background: repeating-linear-gradient(90deg, var(--navy) 0 var(--stripe-size), var(--stripe) var(--stripe-size) calc(var(--stripe-size) * 2));
+    aspect-ratio: 100 / 37;           /* proporción real de la cancha */
+    min-height: 20rem;                /* con zoom alto, crece en alto en vez de cortar texto */
   }
-  .field::before { left: 6px; top: 6px; right: auto; }
-  .field::after { right: 6px; bottom: 6px; }
-  .endzone { flex: 18; min-height: 0; writing-mode: vertical-rl; }
-  /* rotada 180° para leer de abajo arriba; su borde izquierdo queda visualmente a la derecha (línea de gol) */
+
+  /* 18 % + 64 % + 18 % = 100 m de cancha */
+  .endzone { flex: 0 0 18%; min-height: 0; writing-mode: vertical-rl; padding: 4% 2%; }
+  /* rotada 180° para leer de abajo arriba; su borde izquierdo queda a la derecha (línea de gol) */
   .endzone-def { border-top: 0; border-left: 3px solid var(--fline); transform: rotate(180deg); }
   .endzone-att { border-bottom: 0; border-left: 3px solid var(--fline); }
-  .endzone-att.is-scored { writing-mode: horizontal-tb; }
-  .field-central { flex: 64; flex-direction: row; }
-  .band { flex: 1; display: flex; }
+  .endzone-att.is-scored { writing-mode: horizontal-tb; font-size: clamp(1rem, 2cqi, 1.5rem); }
+
+  .field-central { flex: 0 0 64%; flex-direction: row; }
+  .band { flex: 0 0 25%; display: flex; min-width: 0; }   /* 4 módulos × 25 % */
   .band + .band { border-bottom: 0; border-left: 1px dashed rgb(255 255 255 / 0.35); }
+
   .band-inner {
     width: 100%;
+    min-height: 0;
     grid-template-columns: 1fr;
     grid-template-areas: 'num' 'body' 'tag';
     align-content: center;
-    padding: var(--space-5) var(--space-4);
+    padding: 10% 8%;
   }
+  .band-num { font-size: clamp(2.5rem, 6cqi, 4.5rem); }
+  .band-title { font-size: clamp(0.95rem, 1.6cqi, 1.25rem); }
+  .band-tag { white-space: normal; }
   .band-current .band-inner { box-shadow: inset 0 -6px 0 var(--yellow); }
 }

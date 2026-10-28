@@ -140,3 +140,21 @@ results/{uid}_{moduleId}            // 1 intento por estudiante por quiz (fase 3
 | 3.3.8 | Login con Google, sin contraseña |
 | 4.1.2 | `role="progressbar"` con valores; `aria-disabled` en bloqueados |
 | 4.1.3 | Feedback y errores en `aria-live` |
+
+### Responsive
+
+Sistema fluido, sin saltos bruscos entre tamaños:
+
+| Técnica | Dónde |
+|---|---|
+| **Tipografía fluida** con `clamp(mín, rem + vw, máx)`, de 320 px a 1440 px | `--fs-*` en `index.css` (cuerpo 16→18 px, h1 32→56 px) |
+| **Espaciado fluido** con `clamp()` | `--space-1` … `--space-7` |
+| **Contenedores en %** con tope: `width: min(100% - 2 × gutter, 72rem)` | header, main, footer |
+| **Gutter proporcional** al viewport: `clamp(1rem, 4vw, 2.5rem)` | márgenes laterales |
+| **Container queries**: cada componente se adapta a su espacio, no a la pantalla | cancha (`≥ 46em` → horizontal), hero (`≥ 40em` → 2 columnas), admin (`≤ 40em` → tarjetas) |
+| **Proporciones reales de la cancha en %**: zonas de anotación 18 % + zona central 64 % (4 × 25 %), `aspect-ratio: 100 / 37` | `FieldMap.css` |
+| **Unidades `cqi`** para que números y títulos de la cancha escalen con su ancho | `FieldMap.css` |
+| **Breakpoints en `em`**, no en px: respetan el zoom y el tamaño de fuente del usuario | header (`25em`, `35em`, `21.25em`) |
+| `100dvh`, `env(safe-area-inset-*)` | login, header y footer en celulares con notch |
+
+Verificado sin scroll horizontal (`scrollWidth − innerWidth = 0`) en 320, 390, 768, 1024 y 1440 px, y con zoom al 200 %. Cumple WCAG 1.4.4 (texto al 200 %) y 1.4.10 (reflow a 320 px).
