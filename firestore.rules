@@ -12,7 +12,8 @@ service cloud.firestore {
     // Mantener igual a ADMIN_EMAILS en src/config.ts (en minúscula).
     function isAdmin() {
       return signedIn() && request.auth.token.email.lower() in [
-        'diego.mahechar@uniagustiniana.edu.co'
+        'diego.mahechar@uniagustiniana.edu.co',
+        'diegomahereyes@gmail.com'
       ];
     }
 
