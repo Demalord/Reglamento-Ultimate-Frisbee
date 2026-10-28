@@ -345,14 +345,13 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 /* ═══ Breakpoints del header (en em → respetan el zoom) ═══ */
-@media (max-width: 25em) {          /* < 400px: sin subtítulo */
+@media (max-width: 48em) {          /* < 768px: sin el nombre del equipo */
   .brand small { display: none; }
 }
-@media (max-width: 35em) {          /* < 560px: "Inicio" lo cubre el logo */
+@media (max-width: 35em) {          /* < 560px: solo Agusti; el logo ya lleva al inicio */
   .nav .nav-hide-sm { display: none; }
-}
-@media (max-width: 21.25em) {       /* < 340px o zoom alto: solo el logo */
-  .brand > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .brand > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .brand img { width: 2.5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

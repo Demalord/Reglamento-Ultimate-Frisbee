@@ -9,7 +9,9 @@ import { TEAM_MOTTO } from '../config'
 export function Home() {
   const { profile, done, isAdmin } = useAuth()
   const next = nextLesson(done)
-  const firstName = (profile?.name ?? '').split(' ')[0]
+  // Google a veces entrega el nombre en mayúsculas ("DIEGO"): se normaliza a "Diego"
+  const rawFirst = (profile?.name ?? '').trim().split(/\s+/)[0] ?? ''
+  const firstName = rawFirst ? rawFirst[0].toLocaleUpperCase('es') + rawFirst.slice(1).toLocaleLowerCase('es') : ''
   const started = done.size > 0
   const nextModule = next ? MODULES.find((m) => m.lessons.some((l) => l.id === next.id)) : null
 
