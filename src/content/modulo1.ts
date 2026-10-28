@@ -69,19 +69,47 @@ export const MODULO_1: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Haces un pase y el disco cae al piso sin que ningún compañero lo atrape. ¿Qué pasa?',
-      options: [
-        'Se repite el pase desde donde estabas',
-        'Es turnover: el otro equipo toma el disco y ataca hacia la zona contraria',
-        'Sigue tu equipo si el disco cayó dentro del campo',
-        'Lo decide el capitán de tu equipo',
-      ],
-      correct: 1,
-      explanation:
-        'Cualquier pase incompleto es un turnover: el otro equipo establece la posesión e intenta anotar en la zona de anotación opuesta.',
-      ruleRef: 'Introducción',
-    },
+    checkpoints: [
+      {
+        prompt: 'Haces un pase y el disco cae al piso sin que ningún compañero lo atrape. ¿Qué pasa?',
+        options: [
+          'Se repite el pase desde donde estabas',
+          'Es turnover: el otro equipo toma el disco y ataca hacia la zona contraria',
+          'Sigue tu equipo si el disco cayó dentro del campo',
+          'Lo decide el capitán de tu equipo',
+        ],
+        correct: 1,
+        explanation:
+          'Cualquier pase incompleto es un turnover: el otro equipo establece la posesión e intenta anotar en la zona de anotación opuesta.',
+        ruleRef: 'Introducción',
+      },
+      {
+        prompt: '¿Cuántos jugadores tiene cada equipo en la cancha en un partido normal de Ultimate?',
+        options: [
+          'Cinco',
+          'Siete',
+          'Nueve',
+          'Once',
+        ],
+        correct: 1,
+        explanation:
+          'El Ultimate es un deporte de siete contra siete (Introducción). En la sección 5 verás que el mínimo por punto es cinco.',
+        ruleRef: 'Introducción',
+      },
+      {
+        prompt: '¿Quién arbitra un partido de Ultimate?',
+        options: [
+          'Un árbitro principal y dos asistentes',
+          'Los entrenadores de cada equipo',
+          'Los propios jugadores',
+          'Solo los capitanes de Espíritu',
+        ],
+        correct: 2,
+        explanation:
+          'El Ultimate es autoarbitrado: los jugadores hacen y resuelven sus propias llamadas, guiados por el Espíritu del Juego (Introducción y 1.1).',
+        ruleRef: 'Introducción, 1.1',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m1.l2
@@ -156,19 +184,47 @@ export const MODULO_1: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: '¿Cuándo deberías hacer una llamada según el Espíritu del Juego?',
-      options: [
-        'Siempre que notes cualquier contacto o error del rival',
-        'Solo si el capitán de tu equipo está de acuerdo',
-        'Cuando la infracción cambia el resultado de la jugada o la seguridad de alguien está en riesgo',
-        'Solo en jugadas que terminan en gol',
-      ],
-      correct: 2,
-      explanation:
-        'La regla 1.3.10 pide hacer llamadas solo cuando la infracción es lo bastante importante como para cambiar el resultado de la acción, o cuando la seguridad de un jugador está en riesgo.',
-      ruleRef: '1.3.10',
-    },
+    checkpoints: [
+      {
+        prompt: '¿Cuándo deberías hacer una llamada según el Espíritu del Juego?',
+        options: [
+          'Siempre que notes cualquier contacto o error del rival',
+          'Solo si el capitán de tu equipo está de acuerdo',
+          'Cuando la infracción cambia el resultado de la jugada o la seguridad de alguien está en riesgo',
+          'Solo en jugadas que terminan en gol',
+        ],
+        correct: 2,
+        explanation:
+          'La regla 1.3.10 pide hacer llamadas solo cuando la infracción es lo bastante importante como para cambiar el resultado de la acción, o cuando la seguridad de un jugador está en riesgo.',
+        ruleRef: '1.3.10',
+      },
+      {
+        prompt: 'Hay una infracción deliberada y grave de las reglas. ¿Qué deben hacer los capitanes?',
+        options: [
+          'Nada, se sigue jugando',
+          'Hablarlo y decidir un resultado adecuado, aunque no sea el de una regla específica',
+          'Pedir que el jugador salga del partido',
+          'Repetir el punto completo',
+        ],
+        correct: 1,
+        explanation:
+          'Ante una infracción deliberada o muy grave de las reglas o del Espíritu, los capitanes deben discutirlo y decidir un resultado adecuado, aunque no siga una regla específica (1.2.1).',
+        ruleRef: '1.2.1',
+      },
+      {
+        prompt: 'Durante una discusión de una llamada, ¿cuál de estas conductas NO pide el reglamento?',
+        options: [
+          'Explicar tu punto de vista de forma clara y breve',
+          'Dejar que el rival hable',
+          'Insistir hasta que el rival acepte tu versión',
+          'Usar palabras y lenguaje corporal respetuosos',
+        ],
+        correct: 2,
+        explanation:
+          'El reglamento pide explicar breve y claramente, dejar hablar al rival, escucharlo, ser respetuoso y resolver rápido (1.3). Insistir hasta imponer tu versión va contra todo eso.',
+        ruleRef: '1.3',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m1.l3
@@ -247,19 +303,47 @@ export const MODULO_1: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Hay una llamada, los dos equipos lo discuten y no logran ponerse de acuerdo sobre qué pasó. ¿Cómo sigue el juego?',
-      options: [
-        'Gana la versión del equipo que tiene el disco',
-        'Se repite el punto completo',
-        'Deciden los entrenadores desde la banda',
-        'El disco vuelve al último lanzador no disputado',
-      ],
-      correct: 3,
-      explanation:
-        'Según 1.12, si no hay acuerdo o no está claro qué ocurrió (o qué habría ocurrido), el disco vuelve al último lanzador cuya posesión nadie discute.',
-      ruleRef: '1.12',
-    },
+    checkpoints: [
+      {
+        prompt: 'Hay una llamada, los dos equipos lo discuten y no logran ponerse de acuerdo sobre qué pasó. ¿Cómo sigue el juego?',
+        options: [
+          'Gana la versión del equipo que tiene el disco',
+          'Se repite el punto completo',
+          'Deciden los entrenadores desde la banda',
+          'El disco vuelve al último lanzador no disputado',
+        ],
+        correct: 3,
+        explanation:
+          'Según 1.12, si no hay acuerdo o no está claro qué ocurrió (o qué habría ocurrido), el disco vuelve al último lanzador cuya posesión nadie discute.',
+        ruleRef: '1.12',
+      },
+      {
+        prompt: '¿Quiénes deben discutir una llamada?',
+        options: [
+          'Todo el equipo, incluidos los que están en la banda',
+          'Los jugadores directamente involucrados y los que tuvieron la mejor perspectiva',
+          'Solo los capitanes',
+          'El público y los entrenadores',
+        ],
+        correct: 1,
+        explanation:
+          'Las llamadas las discuten los jugadores directamente involucrados en la jugada y los que tuvieron la mejor perspectiva (1.10).',
+        ruleRef: '1.10',
+      },
+      {
+        prompt: 'Hiciste una llamada y luego te das cuenta de que no era correcta. ¿Qué es buen Espíritu?',
+        options: [
+          'Mantenerla para no quedar mal',
+          'Retirarla',
+          'Pedir que la decida el capitán rival',
+          'Esperar a ver si el rival la disputa',
+        ],
+        correct: 1,
+        explanation:
+          'Retirar una llamada cuando ya no crees que fuera correcta es uno de los ejemplos de buen Espíritu (1.5.1).',
+        ruleRef: '1.5.1',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m1.l4
@@ -332,19 +416,47 @@ export const MODULO_1: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Un receptor atrapa el disco con un pie dentro de la zona de anotación que ataca y el otro pie pisando la línea de gol. ¿Es gol?',
-      options: [
-        'Sí, la línea de gol es parte de la zona de anotación',
-        'No, la línea de gol es parte de la zona central',
-        'No, porque pisó una línea perimetral y es fuera',
-        'Sí, si el rival está de acuerdo',
-      ],
-      correct: 1,
-      explanation:
-        'La línea de gol pertenece a la zona central (2.4). Para anotar, todos los contactos con el suelo deben estar completamente dentro de la zona de anotación; eso lo verás en detalle en el módulo 3.',
-      ruleRef: '2.4',
-    },
+    checkpoints: [
+      {
+        prompt: 'Un receptor atrapa el disco con un pie dentro de la zona de anotación que ataca y el otro pie pisando la línea de gol. ¿Es gol?',
+        options: [
+          'Sí, la línea de gol es parte de la zona de anotación',
+          'No, la línea de gol es parte de la zona central',
+          'No, porque pisó una línea perimetral y es fuera',
+          'Sí, si el rival está de acuerdo',
+        ],
+        correct: 1,
+        explanation:
+          'La línea de gol pertenece a la zona central (2.4). Para anotar, todos los contactos con el suelo deben estar completamente dentro de la zona de anotación; eso lo verás en detalle en el módulo 3.',
+        ruleRef: '2.4',
+      },
+      {
+        prompt: 'Un espectador parado a 2 metros de la línea lateral obstruye a un jugador que va por el disco. ¿Qué se puede hacer?',
+        options: [
+          'Nada, los espectadores son parte del juego',
+          'El jugador obstruido o el lanzador puede llamar «Violation»',
+          'Es turnover automático',
+          'Se repite el punto',
+        ],
+        correct: 1,
+        explanation:
+          'Si personas que no juegan u objetos a menos de 3 metros de la línea perimetral obstruyen la jugada, el jugador obstruido o el lanzador puede llamar «Violation» (2.7).',
+        ruleRef: '2.7',
+      },
+      {
+        prompt: '¿Qué disco se puede usar en un partido?',
+        options: [
+          'Solo el disco oficial del torneo',
+          'Cualquier disco que acepten ambos capitanes',
+          'El que traiga el equipo local',
+          'Cualquier disco de 175 gramos',
+        ],
+        correct: 1,
+        explanation:
+          'Se puede usar cualquier disco que acepten ambos capitanes; la WFDF puede tener una lista de discos recomendados (3.1, 3.2).',
+        ruleRef: '3.1',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m1.l5
@@ -421,19 +533,47 @@ export const MODULO_1: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Tu equipo acaba de anotar y el partido va 5–3. ¿Qué sigue?',
-      options: [
-        'Tu equipo vuelve a recibir el pull',
-        'Tu equipo cambia de lado, pasa a defender y lanza el pull',
-        'Se hace un nuevo sorteo para ver quién lanza',
-        'Los equipos se quedan del mismo lado y el rival lanza',
-      ],
-      correct: 1,
-      explanation:
-        'Tras un gol (si no terminó el partido ni es medio tiempo), el punto siguiente empieza de inmediato, los equipos cambian de lado y el que anotó defiende y lanza el pull (4.5).',
-      ruleRef: '4.5',
-    },
+    checkpoints: [
+      {
+        prompt: 'Tu equipo acaba de anotar y el partido va 5–3. ¿Qué sigue?',
+        options: [
+          'Tu equipo vuelve a recibir el pull',
+          'Tu equipo cambia de lado, pasa a defender y lanza el pull',
+          'Se hace un nuevo sorteo para ver quién lanza',
+          'Los equipos se quedan del mismo lado y el rival lanza',
+        ],
+        correct: 1,
+        explanation:
+          'Tras un gol (si no terminó el partido ni es medio tiempo), el punto siguiente empieza de inmediato, los equipos cambian de lado y el que anotó defiende y lanza el pull (4.5).',
+        ruleRef: '4.5',
+      },
+      {
+        prompt: '¿Cuál es el mínimo de jugadores que un equipo debe poner en la cancha en un punto?',
+        options: [
+          'Tres',
+          'Cinco',
+          'Seis',
+          'Siete',
+        ],
+        correct: 1,
+        explanation:
+          'Cada equipo pone un máximo de siete y un mínimo de cinco jugadores en cada punto (5.1).',
+        ruleRef: '5.1',
+      },
+      {
+        prompt: 'Al empezar la segunda mitad, ¿qué pasa con las elecciones del inicio (quién lanza el pull y qué zona defiende cada uno)?',
+        options: [
+          'Se mantienen iguales',
+          'Se hace un nuevo sorteo',
+          'Se invierten',
+          'Las decide el equipo que va perdiendo',
+        ],
+        correct: 2,
+        explanation:
+          'Al inicio de la segunda mitad, las elecciones iniciales se intercambian (6.3).',
+        ruleRef: '6.3',
+      },
+    ],
   },
 ]
 

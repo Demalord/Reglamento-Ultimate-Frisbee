@@ -34,7 +34,11 @@ export interface LessonContent {
   id: string
   intro: string
   steps: Step[]
-  checkpoint: Question
+  /**
+   * Tres preguntas de control sobre el mismo tema. Se muestra una a la vez:
+   * si falla, pasa a la siguiente; si falla las tres, se reinicia el módulo.
+   */
+  checkpoints: [Question, Question, Question]
 }
 
 export interface ReviewContent {

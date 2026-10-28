@@ -68,19 +68,47 @@ export const MODULO_2: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Un defensor cruza su línea de gol antes de que se suelte el pull y la ofensiva llama «Offside». ¿Qué debe hacer la ofensiva?',
-      options: [
-        'Atrapar el pull y seguir jugando normalmente',
-        'Dejar que el disco caiga sin tocarlo y reanudar como si hubiera pedido brick',
-        'Pedir que se repita el pull',
-        'Hacer un check donde está el defensor',
-      ],
-      correct: 1,
-      explanation:
-        'Si la ofensiva llama offside, debe dejar que el disco toque el suelo sin tocarlo y luego reanuda como si hubiera pedido brick, sin necesidad de check (7.5.2).',
-      ruleRef: '7.5.2',
-    },
+    checkpoints: [
+      {
+        prompt: 'Un defensor cruza su línea de gol antes de que se suelte el pull y la ofensiva llama «Offside». ¿Qué debe hacer la ofensiva?',
+        options: [
+          'Atrapar el pull y seguir jugando normalmente',
+          'Dejar que el disco caiga sin tocarlo y reanudar como si hubiera pedido brick',
+          'Pedir que se repita el pull',
+          'Hacer un check donde está el defensor',
+        ],
+        correct: 1,
+        explanation:
+          'Si la ofensiva llama offside, debe dejar que el disco toque el suelo sin tocarlo y luego reanuda como si hubiera pedido brick, sin necesidad de check (7.5.2).',
+        ruleRef: '7.5.2',
+      },
+      {
+        prompt: 'Después de señalar que están listos, ¿dónde deben estar los atacantes hasta que se suelte el pull?',
+        options: [
+          'Detrás de su línea de gol, donde quieran',
+          'Con un pie sobre la línea de gol que defienden y sin cambiar de ubicación entre ellos',
+          'En cualquier lugar de su zona de defensa',
+          'En el brick',
+        ],
+        correct: 1,
+        explanation:
+          'Tras señalar listos, todos los atacantes deben tener un pie sobre la línea de gol que defienden, sin cambiar de ubicación entre ellos hasta que se suelte el pull (7.3).',
+        ruleRef: '7.3',
+      },
+      {
+        prompt: '¿Hasta cuándo se puede llamar un false start o un offside?',
+        options: [
+          'Hasta el final del punto',
+          'Antes de que la ofensiva toque el disco',
+          'Solo antes de que se suelte el pull',
+          'Hasta que el disco toque el suelo, aunque la ofensiva ya lo haya tocado',
+        ],
+        correct: 1,
+        explanation:
+          'El false start o el offside se deben llamar antes de que la ofensiva toque el disco (7.5).',
+        ruleRef: '7.5',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m2.l2 · 7.7–7.12
@@ -154,19 +182,47 @@ export const MODULO_2: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'El pull cae directo fuera de límites, sin tocar el campo ni a nadie. ¿Cómo eliges el brick?',
-      options: [
-        'Recoges el disco y luego dices «brick»',
-        'Antes de recoger el disco, un atacante extiende un brazo por encima de la cabeza y dice «brick»',
-        'No hay opción: el disco siempre va al brick',
-        'Lo decide la defensa',
-      ],
-      correct: 1,
-      explanation:
-        'La opción de brick se debe señalar antes de recoger el disco: cualquier atacante extiende completamente un brazo por encima de la cabeza y debería decir «brick» (7.12).',
-      ruleRef: '7.12',
-    },
+    checkpoints: [
+      {
+        prompt: 'El pull cae directo fuera de límites, sin tocar el campo ni a nadie. ¿Cómo eliges el brick?',
+        options: [
+          'Recoges el disco y luego dices «brick»',
+          'Antes de recoger el disco, un atacante extiende un brazo por encima de la cabeza y dice «brick»',
+          'No hay opción: el disco siempre va al brick',
+          'Lo decide la defensa',
+        ],
+        correct: 1,
+        explanation:
+          'La opción de brick se debe señalar antes de recoger el disco: cualquier atacante extiende completamente un brazo por encima de la cabeza y debería decir «brick» (7.12).',
+        ruleRef: '7.12',
+      },
+      {
+        prompt: 'Atrapas el pull dentro de tu zona de defensa. ¿Dónde estableces el pivote?',
+        options: [
+          'En la línea de gol más cercana',
+          'En el brick',
+          'En el punto donde estableciste la posesión, aunque sea dentro de tu zona de defensa',
+          'En el punto más cercano de la zona central',
+        ],
+        correct: 2,
+        explanation:
+          'Si atrapas el pull, estableces el pivote en el punto del campo más cercano a donde estableciste la posesión, aunque esté en tu zona de defensa (7.9).',
+        ruleRef: '7.9',
+      },
+      {
+        prompt: 'El pull pica en el campo, toca a un atacante y sale por la lateral a la altura de su zona de defensa. ¿Dónde va el pivote?',
+        options: [
+          'En el brick',
+          'En el punto más cercano de la zona central',
+          'Donde el disco cruzó la línea perimetral, aunque sea en la zona de defensa',
+          'Donde el atacante tocó el disco',
+        ],
+        correct: 2,
+        explanation:
+          'Si el disco toca a un atacante antes de salir, el pivote va donde cruzó la línea perimetral, aunque quede dentro de su zona de defensa (7.11.1).',
+        ruleRef: '7.11.1',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m2.l3 · 8
@@ -238,14 +294,42 @@ export const MODULO_2: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Hay un turnover y el disco queda quieto dentro de una zona de anotación. ¿Cuánto tiempo tiene la ofensiva para establecer el pivote?',
-      options: ['5 segundos', '10 segundos', '20 segundos', 'No hay límite si camina'],
-      correct: 2,
-      explanation:
-        'Si el disco no salió del campo, el lanzador tiene 10 segundos en la zona central y 20 segundos en una zona de anotación, contados desde que el disco queda quieto (8.5.1).',
-      ruleRef: '8.5.1',
-    },
+    checkpoints: [
+      {
+        prompt: 'Hay un turnover y el disco queda quieto dentro de una zona de anotación. ¿Cuánto tiempo tiene la ofensiva para establecer el pivote?',
+        options: ['5 segundos', '10 segundos', '20 segundos', 'No hay límite si camina'],
+        correct: 2,
+        explanation:
+          'Si el disco no salió del campo, el lanzador tiene 10 segundos en la zona central y 20 segundos en una zona de anotación, contados desde que el disco queda quieto (8.5.1).',
+        ruleRef: '8.5.1',
+      },
+      {
+        prompt: 'Un defensor frena un disco que rodaba y lo desplaza varios metros. ¿Qué puede pedir la ofensiva?',
+        options: [
+          'Que sea turnover para la defensa',
+          'Que el pivote se establezca donde el defensor tocó el disco',
+          'Que se repita el pase',
+          'Nada, frenar el disco no está permitido',
+        ],
+        correct: 1,
+        explanation:
+          'Cualquier jugador puede frenar un disco que rueda; si al hacerlo cambia mucho su posición, el rival puede pedir que el pivote vaya donde se tocó el disco (8.4, 8.4.1).',
+        ruleRef: '8.4.1',
+      },
+      {
+        prompt: 'Atacantes y defensores no se ponen de acuerdo sobre dónde debe ir el pivote. ¿Qué se hace?',
+        options: [
+          'Decide la ofensiva',
+          'Decide la defensa',
+          'Se usa el punto medio entre los dos lugares propuestos',
+          'Se va al brick',
+        ],
+        correct: 2,
+        explanation:
+          'Si los jugadores no se ponen de acuerdo en la ubicación del pivote, se usa el punto medio entre los dos lugares propuestos (8.5.4).',
+        ruleRef: '8.5.4',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m2.l4 · 9.1–9.4
@@ -304,14 +388,42 @@ export const MODULO_2: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Te están contando en seis y el marcador cambia: ahora te marca otro defensor. ¿En qué número sigue el conteo?',
-      options: ['Sigue en siete', 'Se reinicia en «Stalling uno»', 'Sigue en seis', 'Se reinicia en cuatro'],
-      correct: 1,
-      explanation:
-        'Si otro jugador pasa a ser el marcador (o el marcador se aleja más de 3 metros), el conteo se reinicia en «Stalling uno» (9.4).',
-      ruleRef: '9.4',
-    },
+    checkpoints: [
+      {
+        prompt: 'Te están contando en seis y el marcador cambia: ahora te marca otro defensor. ¿En qué número sigue el conteo?',
+        options: ['Sigue en siete', 'Se reinicia en «Stalling uno»', 'Sigue en seis', 'Se reinicia en cuatro'],
+        correct: 1,
+        explanation:
+          'Si otro jugador pasa a ser el marcador (o el marcador se aleja más de 3 metros), el conteo se reinicia en «Stalling uno» (9.4).',
+        ruleRef: '9.4',
+      },
+      {
+        prompt: '¿Qué tiene que decir el marcador al empezar el conteo?',
+        options: [
+          '«Uno»',
+          '«Stalling»',
+          '«Disc in»',
+          '«Listo»',
+        ],
+        correct: 1,
+        explanation:
+          'El marcador hace el conteo anunciando «Stalling» y luego contando de uno a diez (9.1).',
+        ruleRef: '9.1',
+      },
+      {
+        prompt: '¿Cuál es el tiempo mínimo entre el inicio de cada número del conteo?',
+        options: [
+          'Medio segundo',
+          'Un segundo',
+          'Dos segundos',
+          'No hay mínimo, solo debe ser claro',
+        ],
+        correct: 1,
+        explanation:
+          'El intervalo entre el inicio de cada número del conteo debe ser de al menos un segundo (9.1).',
+        ruleRef: '9.1',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m2.l5 · 9.5–9.6
@@ -366,14 +478,42 @@ export const MODULO_2: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'El marcador iba en «cinco» cuando el lanzador hizo una llamada de falta y la defensa la disputó. ¿En qué número se reanuda?',
-      options: ['Uno', 'Seis', 'Ocho', 'Nueve'],
-      correct: 1,
-      explanation:
-        'Una llamada en disputa cae en «cualquier otra llamada»: máximo seis. Como el último número fue cinco, se reanuda en el menor entre 5 + 1 = 6 y 6, o sea, seis (9.5.5 y 9.6).',
-      ruleRef: '9.5.5, 9.6',
-    },
+    checkpoints: [
+      {
+        prompt: 'El marcador iba en «cinco» cuando el lanzador hizo una llamada de falta y la defensa la disputó. ¿En qué número se reanuda?',
+        options: ['Uno', 'Seis', 'Ocho', 'Nueve'],
+        correct: 1,
+        explanation:
+          'Una llamada en disputa cae en «cualquier otra llamada»: máximo seis. Como el último número fue cinco, se reanuda en el menor entre 5 + 1 = 6 y 6, o sea, seis (9.5.5 y 9.6).',
+        ruleRef: '9.5.5, 9.6',
+      },
+      {
+        prompt: 'La ofensiva acepta que cometió una infracción. El conteo iba en «dos». ¿En qué número se reanuda?',
+        options: [
+          'Uno',
+          'Tres',
+          'Seis',
+          'Nueve',
+        ],
+        correct: 1,
+        explanation:
+          'Tras una infracción de la ofensiva aceptada se reanuda en máximo nueve. Como el último número fue dos, va el menor entre 2 + 1 = 3 y 9: tres (9.5.2 y 9.6).',
+        ruleRef: '9.5.2, 9.6',
+      },
+      {
+        prompt: 'Hay un stall-out en disputa. ¿En qué número se reanuda el conteo?',
+        options: [
+          'Stalling uno',
+          'Máximo seis',
+          'Stalling ocho',
+          'Máximo nueve',
+        ],
+        correct: 2,
+        explanation:
+          'Después de un stall-out en disputa, el conteo se reanuda en «Stalling ocho» (9.5.3).',
+        ruleRef: '9.5.3',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m2.l6 · 10
@@ -455,18 +595,46 @@ export const MODULO_2: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Hay una parada y el disco quedó en el suelo. ¿Cómo se pone de nuevo en juego?',
-      options: [
-        'El lanzador lo recoge y lanza cuando quiera',
-        'El defensor más cercano al disco dice «Disc in»',
-        'El capitán de la ofensiva dice «Disc in»',
-        'Se espera a que la defensa toque el disco en las manos del lanzador',
-      ],
-      correct: 1,
-      explanation: 'Cuando el disco está en el suelo, el defensor más cercano a él debe decir «Disc in» (10.6.2).',
-      ruleRef: '10.6.2',
-    },
+    checkpoints: [
+      {
+        prompt: 'Hay una parada y el disco quedó en el suelo. ¿Cómo se pone de nuevo en juego?',
+        options: [
+          'El lanzador lo recoge y lanza cuando quiera',
+          'El defensor más cercano al disco dice «Disc in»',
+          'El capitán de la ofensiva dice «Disc in»',
+          'Se espera a que la defensa toque el disco en las manos del lanzador',
+        ],
+        correct: 1,
+        explanation: 'Cuando el disco está en el suelo, el defensor más cercano a él debe decir «Disc in» (10.6.2).',
+        ruleRef: '10.6.2',
+      },
+      {
+        prompt: 'La ofensiva lanza sin hacer el check y completa el pase. La defensa llama la violación del check. ¿Qué pasa?',
+        options: [
+          'El pase cuenta porque se completó',
+          'El pase no cuenta y el disco vuelve al lanzador',
+          'Es turnover',
+          'Se repite el punto',
+        ],
+        correct: 1,
+        explanation:
+          'Tras una violación del check, el pase no cuenta, sea completo o incompleto, y la posesión vuelve al lanzador (10.7.5).',
+        ruleRef: '10.7.5',
+      },
+      {
+        prompt: 'El lanzador tiene el disco y no hay ningún defensor a su alcance. ¿Cómo se hace el check?',
+        options: [
+          'El lanzador toca el disco contra el suelo y puede decir «Disc in»',
+          'Hay que esperar a que llegue un defensor',
+          'El defensor más cercano dice «Disc in» desde donde está',
+          'No hace falta check',
+        ],
+        correct: 0,
+        explanation:
+          'Si no hay un defensor al alcance, el lanzador toca el disco contra el suelo y puede decir «Disc in» (10.6.1.2).',
+        ruleRef: '10.6.1.2',
+      },
+    ],
   },
 
   // ───────────────────────────────────────── m2.l7 · 20
@@ -531,19 +699,47 @@ export const MODULO_2: LessonContent[] = [
         ],
       },
     ],
-    checkpoint: {
-      prompt: 'Durante el juego (después del pull), ¿quién puede pedir un time-out?',
-      options: [
-        'Cualquier jugador de cualquier equipo',
-        'Solo los capitanes',
-        'Solo el lanzador que tiene el disco',
-        'Cualquier jugador del equipo que defiende',
-      ],
-      correct: 2,
-      explanation:
-        'Después del pull, solo un lanzador con posesión del disco puede pedir time-out (20.3). Antes del pull, sí puede pedirlo cualquier jugador (20.2).',
-      ruleRef: '20.3',
-    },
+    checkpoints: [
+      {
+        prompt: 'Durante el juego (después del pull), ¿quién puede pedir un time-out?',
+        options: [
+          'Cualquier jugador de cualquier equipo',
+          'Solo los capitanes',
+          'Solo el lanzador que tiene el disco',
+          'Cualquier jugador del equipo que defiende',
+        ],
+        correct: 2,
+        explanation:
+          'Después del pull, solo un lanzador con posesión del disco puede pedir time-out (20.3). Antes del pull, sí puede pedirlo cualquier jugador (20.2).',
+        ruleRef: '20.3',
+      },
+      {
+        prompt: '¿Cuánto dura un time-out?',
+        options: [
+          '30 segundos',
+          '60 segundos',
+          '75 segundos',
+          '90 segundos',
+        ],
+        correct: 2,
+        explanation:
+          'El time-out dura 75 segundos, tanto antes del pull como durante el juego (20.2, 20.3).',
+        ruleRef: '20.3',
+      },
+      {
+        prompt: 'Después de un time-out pedido durante el juego, ¿se pueden hacer cambios de jugadores?',
+        options: [
+          'Sí, ilimitados',
+          'Sí, uno por equipo',
+          'No, salvo por lesión',
+          'Solo la ofensiva',
+        ],
+        correct: 2,
+        explanation:
+          'Después de un time-out pedido durante el juego no se permiten cambios, salvo por lesión (20.3.1).',
+        ruleRef: '20.3.1',
+      },
+    ],
   },
 ]
 

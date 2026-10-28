@@ -507,3 +507,39 @@
 .glossary-item.is-target { border: 3px solid var(--navy); box-shadow: 5px 5px 0 var(--yellow); }
 .glossary-item dt { font-weight: 800; font-style: italic; font-stretch: 85%; font-size: var(--fs-lede); }
 .glossary-item dd { margin: var(--space-1) 0 0; color: var(--ink); }
+
+/* ═══ Intentos de la pregunta de control ═══ */
+.checkpoint-wrap { display: grid; gap: var(--space-4); }
+.checkpoint-wrap > .leccion-actions { margin-top: 0; }
+.attempts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: 650;
+  color: var(--ink-2);
+}
+.attempts:focus { box-shadow: none; }
+.attempts-dots { display: inline-flex; gap: 6px; }
+.attempt-dot {
+  width: 0.875rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid var(--navy);
+  background: transparent;
+}
+.attempt-dot.is-used { background: var(--error); border-color: var(--error); }
+.attempt-dot.is-current { background: var(--yellow); }
+
+.failed-out {
+  padding: var(--space-5);
+  background: var(--navy);
+  color: #fff;
+  border-radius: var(--radius);
+  box-shadow: 6px 6px 0 var(--yellow);
+  margin-right: 6px;
+}
+.failed-out h2 { color: #fff; font-size: var(--fs-h3); margin-top: var(--space-4); }
+.failed-out p { color: rgb(255 255 255 / 0.85); }
+.failed-out :focus-visible { box-shadow: 0 0 0 3px var(--navy), 0 0 0 6px var(--yellow); }

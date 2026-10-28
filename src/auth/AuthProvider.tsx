@@ -1,8 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { onAuthStateChanged, signInWithPopup, signOut as fbSignOut, type User } from 'firebase/auth'
 import {
+  arrayRemove,
   arrayUnion,
+  deleteField,
   doc,
+  increment,
   getDoc,
   onSnapshot,
   serverTimestamp,
@@ -18,7 +21,12 @@ export interface UserProfile {
   photoURL: string | null
   completedLessons: string[]
   lastLesson: string | null
+  /** Preguntas de control falladas por lección (clave "m1_l4"). Se borra al completar o reiniciar. */
+  failedChecks?: Record<string, number>
 }
+
+/** Las claves de Firestore no pueden llevar puntos sin anidarse: "m1.l4" → "m1_l4". */
+export const checkKey = (lessonId: string) => lessonId.replace(/\./g, '_')
 
 interface AuthState {
   user: User | null
@@ -29,6 +37,11 @@ interface AuthState {
   signIn: () => Promise<void>
   signOut: () => Promise<void>
   completeLesson: (lessonId: string) => Promise<void>
+  /** Fallos en la pregunta de control de una lección (persistidos). */
+  failedChecks: (lessonId: string) => number
+  recordFailedCheck: (lessonId: string) => Promise<void>
+  /** Borra el progreso de un módulo: sus lecciones, su repaso y sus intentos fallidos. */
+  resetModule: (moduleId: number, lessonIds: string[]) => Promise<void>
 }
 
 const AuthContext = createContext<AuthState | null>(null)
@@ -105,6 +118,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await updateDoc(doc(db, 'users', user.uid), {
           completedLessons: arrayUnion(lessonId),
           lastLesson: lessonId,
+          [`failedChecks.${checkKey(lessonId)}`]: deleteField(),
+        })
+      },
+      failedChecks: (lessonId) => profile?.failedChecks?.[checkKey(lessonId)] ?? 0,
+      recordFailedCheck: async (lessonId) => {
+        if (!user) return
+        await updateDoc(doc(db, 'users', user.uid), {
+          [`failedChecks.${checkKey(lessonId)}`]: increment(1),
+        })
+      },
+      resetModule: async (moduleId, lessonIds) => {
+        if (!user) return
+        const ids = [...lessonIds, `m${moduleId}.repaso`]
+        const clearFails = Object.fromEntries(ids.map((id) => [`failedChecks.${checkKey(id)}`, deleteField()]))
+        await updateDoc(doc(db, 'users', user.uid), {
+          completedLessons: arrayRemove(...ids),
+          lastLesson: null,
+          ...clearFails,
         })
       },
     }

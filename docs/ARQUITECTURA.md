@@ -50,7 +50,7 @@ Módulo → Lecciones (3–6 min) → Pasos ("Continuar") → Pregunta de contro
 - El desbloqueo se calcula en el cliente: `content/manifest.ts` (orden) + `users/{uid}.completedLessons`.
 - Bloqueado ≠ oculto: lo futuro se ve con candado y el motivo.
 - Lo completado queda libre para repasar.
-- La pregunta de control da feedback inmediato con la regla; no bloquea por fallar, solo por no responder.
+- Cada lección tiene **3 preguntas de control distintas**. Si falla, ve la respuesta correcta y pasa a otra pregunta; si falla las 3, **se reinicia el módulo completo**. Los fallos se guardan en `users/{uid}.failedChecks`, así que recargar no los borra. Las lecciones completadas quedan en modo práctica.
 
 ### Módulos (24 lecciones)
 
@@ -80,7 +80,7 @@ Cada módulo es un archivo TypeScript (`src/content/moduloN.ts`) registrado en `
       { type: 'list', items: ['…'], ordered: false },
     ]},
   ],
-  checkpoint: { prompt, options: [...], correct: 1, explanation, ruleRef: '2.4' },
+  checkpoints: [q1, q2, q3],                 // { prompt, options, correct, explanation, ruleRef }
 }
 ```
 
@@ -96,6 +96,7 @@ users/{uid}
   completedLessons: string[]        // ["m1.l1", ...] fuente de verdad del desbloqueo
   completedReviews: number[]        // [1, 2]  (fase 2)
   lastLesson: string | null
+  failedChecks: { "m1_l4": 2 }       // fallos por lección; se borra al completar o reiniciar
 
 schedule/{moduleId}                 // anuncio visible para todos (fase 3)
   moduleId, opensOn: "2026-11-05", note
