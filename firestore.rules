@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// Reglas para un equipo de confianza (~15 personas).
+// Objetivo: que nadie dañe datos por accidente y que los quizzes no se vean antes de tiempo.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Mantener igual a ADMIN_EMAILS en src/config.ts (en minúscula).
+    function isAdmin() {
+      return signedIn() && request.auth.token.email.lower() in [
+        'diego.mahechar@uniagustiniana.edu.co'
+      ];
+    }
+
+    // ── Perfiles y progreso ───────────────────────────────
+    // Cada estudiante solo se ve a sí mismo; el admin ve a todos.
+    match /users/{uid} {
+      allow read: if isAdmin() || request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid;
+      allow delete: if isAdmin();
+    }
+
+    // ── Calendario de quizzes (anuncio público, sin preguntas) ──
+    match /schedule/{moduleId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // ── Quizzes: invisibles hasta que el admin los activa ──
+    // El cliente del estudiante debe consultar con where('active', '==', true).
+    match /quizzes/{moduleId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.active == true);
+      allow write: if isAdmin();
+    }
+
+    // ── Resultados: 1 intento por estudiante por quiz ─────
+    // ID del documento: {uid}_{moduleId}. Sin update: no se puede reescribir el puntaje.
+    match /results/{resultId} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && resultId == request.auth.uid + '_' + string(request.resource.data.moduleId)
+        && get(/databases/$(database)/documents/quizzes/$(string(request.resource.data.moduleId))).data.active == true;
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow delete: if isAdmin(); // reiniciar intento
+    }
+  }
+}
