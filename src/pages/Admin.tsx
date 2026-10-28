@@ -3,7 +3,7 @@ import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { ProgressBar } from '../components/ProgressBar'
 import { MODULES, TOTAL_LESSONS } from '../content/manifest'
-import { countDone } from '../lib/progress'
+import { countAllLessons, countDone } from '../lib/progress'
 
 interface Row {
   uid: string
@@ -78,7 +78,7 @@ export function Admin() {
                       <span className="cell-sub">{r.email}</span>
                     </th>
                     <td className="cell-progress">
-                      <ProgressBar value={done.size} max={TOTAL_LESSONS} label={`Progreso de ${r.name}`} />
+                      <ProgressBar value={countAllLessons(done)} max={TOTAL_LESSONS} label={`Progreso de ${r.name}`} />
                     </td>
                     {MODULES.map((m) => (
                       <td key={m.id} className="num" data-label={`Módulo ${m.id}`}>

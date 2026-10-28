@@ -3,7 +3,7 @@ import { useAuth } from '../auth/AuthProvider'
 import { CheckIcon, LockIcon } from '../components/FieldMap'
 import { ProgressBar } from '../components/ProgressBar'
 import { getModule, rulesLabel } from '../content/manifest'
-import { countDone, lessonStatus, lockReason, moduleStatus } from '../lib/progress'
+import { countDone, lessonStatus, lockReason, moduleStatus, reviewId, reviewStatus } from '../lib/progress'
 
 export function Modulo() {
   const { moduleId } = useParams()
@@ -64,7 +64,45 @@ export function Modulo() {
             </li>
           )
         })}
+        <ReviewItem moduleId={mod.id} status={reviewStatus(mod, done, isAdmin)} />
       </ol>
     </div>
+  )
+}
+
+function ReviewItem({ moduleId, status }: { moduleId: number; status: ReturnType<typeof reviewStatus> }) {
+  const body = (
+    <>
+      <span className={`lesson-dot dot-${status} dot-review`} aria-hidden="true">
+        {status === 'completed' ? <CheckIcon /> : status === 'locked' ? <LockIcon /> : '★'}
+      </span>
+      <span className="lesson-body">
+        <span className="lesson-title">Repaso del módulo</span>
+        <span className="lesson-meta">
+          {status === 'locked'
+            ? 'Completa todas las lecciones para desbloquear'
+            : status === 'completed'
+              ? 'Hecho. Puedes repetirlo cuando quieras.'
+              : 'Preguntas sin nota. Al terminarlo se abre el siguiente módulo.'}
+        </span>
+      </span>
+      <span className="sr-only">
+        {status === 'completed' && 'Completado'}
+        {status === 'current' && 'Siguiente paso'}
+        {status === 'locked' && 'Bloqueado'}
+      </span>
+    </>
+  )
+  return (
+    <li className={`lesson lesson-review lesson-${status}`} data-id={reviewId(moduleId)}>
+      {status === 'locked' ? (
+        <div className="lesson-inner" aria-disabled="true">{body}</div>
+      ) : (
+        <Link to={`/modulo/${moduleId}/repaso`} className="lesson-inner">
+          {body}
+          {status === 'current' && <span className="lesson-cta" aria-hidden="true">Empezar</span>}
+        </Link>
+      )}
+    </li>
   )
 }

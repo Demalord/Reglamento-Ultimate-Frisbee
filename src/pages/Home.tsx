@@ -3,17 +3,19 @@ import { useAuth } from '../auth/AuthProvider'
 import { FieldMap } from '../components/FieldMap'
 import { ProgressBar } from '../components/ProgressBar'
 import { MODULES, TOTAL_LESSONS, rulesLabel } from '../content/manifest'
-import { nextLesson } from '../lib/progress'
+import { countAllLessons, itemPath, nextItem } from '../lib/progress'
 import { TEAM_MOTTO } from '../config'
 
 export function Home() {
   const { profile, done, isAdmin } = useAuth()
-  const next = nextLesson(done)
+  const next = nextItem(done)
+  const lessonsDone = countAllLessons(done)
   // Google a veces entrega el nombre en mayúsculas ("DIEGO"): se normaliza a "Diego"
   const rawFirst = (profile?.name ?? '').trim().split(/\s+/)[0] ?? ''
   const firstName = rawFirst ? rawFirst[0].toLocaleUpperCase('es') + rawFirst.slice(1).toLocaleLowerCase('es') : ''
   const started = done.size > 0
-  const nextModule = next ? MODULES.find((m) => m.lessons.some((l) => l.id === next.id)) : null
+  const nextModule = next ? MODULES.find((m) => m.id === next.moduleId) : null
+  const nextLessonMeta = next && nextModule ? nextModule.lessons.find((l) => l.id === next.id) : undefined
 
   return (
     <div className="home">
@@ -31,16 +33,18 @@ export function Home() {
         </div>
         <div className="hero-progress">
           <span className="muted">Lecciones completadas</span>
-          <ProgressBar value={done.size} max={TOTAL_LESSONS} label="Progreso total" />
+          <ProgressBar value={lessonsDone} max={TOTAL_LESSONS} label="Progreso total" />
         </div>
       </div>
 
       {next && nextModule && (
-        <Link to={`/modulo/${nextModule.id}/leccion/${next.id}`} className="continue">
+        <Link to={itemPath(next)} className="continue">
           <span className="continue-label brush">{started ? 'Continúa donde quedaste' : 'Primera lección'}</span>
           <span className="continue-title">{next.title}</span>
           <span className="continue-meta">
-            Módulo {nextModule.id}. {rulesLabel(next.rules)}. Unos {next.minutes} minutos.
+            {nextLessonMeta
+              ? `Módulo ${nextModule.id}. ${rulesLabel(nextLessonMeta.rules)}. Unos ${nextLessonMeta.minutes} minutos.`
+              : `Unas preguntas sin nota para cerrar el módulo ${nextModule.id}.`}
           </span>
         </Link>
       )}

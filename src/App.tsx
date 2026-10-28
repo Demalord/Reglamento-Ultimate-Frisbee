@@ -7,7 +7,9 @@ import { Admin } from './pages/Admin'
 import { Home } from './pages/Home'
 import { Leccion } from './pages/Leccion'
 import { Login } from './pages/Login'
-import { Glosario, NotFound, SetupNeeded } from './pages/Misc'
+import { Glosario } from './pages/Glosario'
+import { NotFound, SetupNeeded } from './pages/Misc'
+import { Repaso } from './pages/Repaso'
 import { Modulo } from './pages/Modulo'
 import './pages/pages.css'
 
@@ -29,6 +31,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="modulo/:moduleId" element={<Modulo />} />
             <Route path="modulo/:moduleId/leccion/:lessonId" element={<Leccion />} />
+            <Route path="modulo/:moduleId/repaso" element={<Repaso />} />
             <Route path="glosario" element={<Glosario />} />
             {/* Fase 3: quiz/:moduleId y quiz/:moduleId/resultado */}
             <Route

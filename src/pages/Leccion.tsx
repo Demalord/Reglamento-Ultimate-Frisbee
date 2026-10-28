@@ -1,70 +1,186 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
+import { Blocks } from '../components/Blocks'
 import { ProgressBar } from '../components/ProgressBar'
+import { QuestionCard } from '../components/QuestionCard'
+import { getLessonContent } from '../content'
 import { getModule, rulesLabel } from '../content/manifest'
 import { lessonStatus } from '../lib/progress'
 
 /**
- * Fase 1: estructura de la lección y desbloqueo.
- * Fase 2 reemplaza el cuerpo por los pasos en Markdown + la pregunta de control.
+ * Lección guiada (staged disclosure):
+ *   pasos que se revelan con "Continuar" → pregunta de control → completar.
+ * Si la lección ya está completada, se muestra todo para repasar libremente.
  */
+/** Monta una instancia nueva por lección, así el estado arranca limpio. */
 export function Leccion() {
+  const { lessonId } = useParams()
+  return <LeccionView key={lessonId} />
+}
+
+function LeccionView() {
   const { moduleId, lessonId } = useParams()
   const mod = getModule(Number(moduleId))
   const { done, isAdmin, completeLesson } = useAuth()
   const navigate = useNavigate()
+
+  const content = lessonId ? getLessonContent(lessonId) : undefined
+  const totalSteps = content?.steps.length ?? 0
+  const alreadyDone = !!lessonId && done.has(lessonId)
+
+  // revealed: cuántos pasos se ven; totalSteps + 1 = también la pregunta.
+  // Lección ya completada → todo visible para repasar.
+  const [revealed, setRevealed] = useState(() => (alreadyDone ? totalSteps + 1 : 1))
+  const [answered, setAnswered] = useState(alreadyDone)
   const [saving, setSaving] = useState(false)
+  const stepRefs = useRef<(HTMLElement | null)[]>([])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
+  }, [])
 
   const idx = mod?.lessons.findIndex((l) => l.id === lessonId) ?? -1
   const lesson = mod && idx >= 0 ? mod.lessons[idx] : null
   if (!mod || !lesson) return <Navigate to="/" replace />
   if (lessonStatus(lesson, done, isAdmin) === 'locked') return <Navigate to={`/modulo/${mod.id}`} replace />
 
-  const isDone = done.has(lesson.id)
   const nextInModule = mod.lessons[idx + 1]
+  const nextPath = nextInModule ? `/modulo/${mod.id}/leccion/${nextInModule.id}` : `/modulo/${mod.id}`
+  const nextLabel = nextInModule ? 'Siguiente lección' : 'Volver al módulo'
+
+  const reveal = () => {
+    const n = revealed + 1
+    setRevealed(n)
+    // Mueve el foco al nuevo paso (teclado y lectores de pantalla) y lo muestra
+    requestAnimationFrame(() => {
+      const el = stepRefs.current[n - 1]
+      el?.focus({ preventScroll: true })
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
 
   const finish = async () => {
     setSaving(true)
     try {
       await completeLesson(lesson.id)
-      navigate(nextInModule ? `/modulo/${mod.id}/leccion/${nextInModule.id}` : `/modulo/${mod.id}`)
+      navigate(nextPath)
     } finally {
       setSaving(false)
     }
   }
 
+  // ── Lección sin contenido todavía (módulos en preparación) ──
+  if (!content) {
+    return (
+      <article className="leccion">
+        <LessonBar moduleId={mod.id} value={idx + 1} max={mod.lessons.length} />
+        <h1>{lesson.title}</h1>
+        <p className="muted">{rulesLabel(lesson.rules)}</p>
+        <div className="notice">
+          <p style={{ marginBottom: 0 }}>Esta lección está en preparación.</p>
+        </div>
+        {isAdmin && !alreadyDone && (
+          <div className="leccion-actions">
+            <button type="button" className="btn btn-secondary" onClick={finish} disabled={saving}>
+              Marcar como completada (admin)
+            </button>
+          </div>
+        )}
+      </article>
+    )
+  }
+
+  const showQuestion = revealed > totalSteps
+
   return (
     <article className="leccion">
-      <div className="leccion-bar">
-        <Link to={`/modulo/${mod.id}`} className="back-link">Módulo {mod.id}</Link>
-        <ProgressBar value={idx + 1} max={mod.lessons.length} label="Lección dentro del módulo" />
-      </div>
+      <LessonBar moduleId={mod.id} value={Math.min(revealed, totalSteps + 1)} max={totalSteps + 1} label="Avance de la lección" />
 
-      <h1>{lesson.title}</h1>
-      <p className="muted">{rulesLabel(lesson.rules)}</p>
-
-      <div className="notice">
-        <p>El contenido de esta lección llega en la fase 2.</p>
-        <p className="muted" style={{ marginBottom: 0 }}>
-          Por ahora puedes marcarla como completada para probar el desbloqueo.
+      <header className="leccion-head">
+        <p className="leccion-kicker">
+          Lección {idx + 1} de {mod.lessons.length}. {rulesLabel(lesson.rules)}
         </p>
-      </div>
+        <h1>{lesson.title}</h1>
+        <p className="lede">{content.intro}</p>
+      </header>
 
-      <div className="leccion-actions">
-        {isDone ? (
-          <Link
-            className="btn btn-primary"
-            to={nextInModule ? `/modulo/${mod.id}/leccion/${nextInModule.id}` : `/modulo/${mod.id}`}
-          >
-            {nextInModule ? 'Siguiente lección' : 'Volver al módulo'}
-          </Link>
-        ) : (
-          <button type="button" className="btn btn-primary" onClick={finish} disabled={saving}>
-            {saving ? 'Guardando…' : 'Completar lección'}
+      <ol className="steps">
+        {content.steps.slice(0, revealed).map((step, i) => (
+          <li key={i} className="step">
+            <section aria-labelledby={`step-${i}`}>
+              <h2
+                id={`step-${i}`}
+                ref={(el) => {
+                  stepRefs.current[i] = el
+                }}
+                tabIndex={-1}
+                className="step-title"
+              >
+                <span className="step-num" aria-hidden="true">{i + 1}</span>
+                {step.title}
+              </h2>
+              <div className="step-body">
+                <Blocks blocks={step.blocks} />
+              </div>
+            </section>
+          </li>
+        ))}
+      </ol>
+
+      {!showQuestion && (
+        <div className="leccion-actions">
+          <button type="button" className="btn btn-primary" onClick={reveal}>
+            {revealed === totalSteps ? 'Ir a la pregunta' : 'Continuar'}
           </button>
-        )}
-      </div>
+          <span className="muted step-count" aria-hidden="true">
+            Paso {revealed} de {totalSteps}
+          </span>
+        </div>
+      )}
+
+      {showQuestion && (
+        <div
+          className="checkpoint"
+          ref={(el) => {
+            stepRefs.current[totalSteps] = el
+          }}
+          tabIndex={-1}
+        >
+          <QuestionCard
+            key={lesson.id}
+            heading="Pregunta de control"
+            question={content.checkpoint}
+            onAnswered={() => setAnswered(true)}
+          />
+        </div>
+      )}
+
+      {showQuestion && (
+        <div className="leccion-actions">
+          {alreadyDone ? (
+            <Link className="btn btn-primary" to={nextPath}>
+              {nextLabel}
+            </Link>
+          ) : (
+            <button type="button" className="btn btn-primary" onClick={finish} disabled={!answered || saving}>
+              {saving ? 'Guardando…' : 'Completar lección'}
+            </button>
+          )}
+          {!answered && <span className="muted step-count">Responde la pregunta para completar la lección.</span>}
+        </div>
+      )}
     </article>
+  )
+}
+
+function LessonBar({ moduleId, value, max, label = 'Lección dentro del módulo' }: { moduleId: number; value: number; max: number; label?: string }) {
+  return (
+    <div className="leccion-bar">
+      <Link to={`/modulo/${moduleId}`} className="back-link">
+        Módulo {moduleId}
+      </Link>
+      <ProgressBar value={value} max={max} label={label} />
+    </div>
   )
 }

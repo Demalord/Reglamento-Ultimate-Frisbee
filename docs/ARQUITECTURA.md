@@ -63,6 +63,31 @@ Módulo → Lecciones (3–6 min) → Pasos ("Continuar") → Pregunta de contro
 
 Las Definiciones forman el glosario transversal.
 
+## Formato del contenido
+
+Cada módulo es un archivo TypeScript (`src/content/moduloN.ts`) registrado en `src/content/index.ts`. Así el contenido tiene tipos y el build falla si algo está mal formado.
+
+```ts
+{
+  id: 'm1.l4',
+  intro: 'Una frase que dice de qué trata la lección.',
+  steps: [                                   // se revelan uno a uno con "Continuar"
+    { title: 'Las dos líneas que confunden', blocks: [
+      { type: 'p', text: 'Texto con **negrita** y [[linea-de-gol|términos del glosario]].' },
+      { type: 'rule', ref: '2.4', text: 'Lo que dice el reglamento.' },
+      { type: 'example', text: 'Una jugada concreta.' },
+      { type: 'key', text: 'La idea clave.' },
+      { type: 'list', items: ['…'], ordered: false },
+    ]},
+  ],
+  checkpoint: { prompt, options: [...], correct: 1, explanation, ruleRef: '2.4' },
+}
+```
+
+- `[[slug]]` o `[[slug|texto]]` enlaza al glosario; al tocarlo se abre la definición como hoja fija abajo de la pantalla.
+- El repaso de cada módulo (`REPASO_N`) tiene 5–8 preguntas con `lessonId`, para sugerir qué lección repasar si falla.
+- El repaso se guarda como `"m{n}.repaso"` en `completedLessons` y es lo que desbloquea el siguiente módulo.
+
 ## Modelo de datos (Firestore)
 
 ```
